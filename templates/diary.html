@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block css_block %}
+    <link href="../static/css/plugins/footable/footable.core.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:42px;">
+                    运行日记
+                    {% if diary_user|length >0 %}
+                        <form role="form" style="margin-left: 3px;float:right;" action="/diary/del">
+                            <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要清空所有记录?')" class="btn btn-info btn-xs">清空日记</button>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="footable table table-stripped toggle-arrow-tiny" data-page-size="30">
+                            <thead>
+                            <tr>
+                                <th class="col-md-1">时间</th>
+                                <th class="col-md-1 hidden-xs">类型</th>
+                                <th class="col-md-1">分类</th>
+                                <th class="col-md-1">账户</th>
+                                <th class="col-md-1">详细信息</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in diary_user %}
+                                <tr>
+                                    <td class="hidden-xs">{{ row.time|e }}</td>
+                                    <td class="visible-xs">{{ row.time.split(' ')[1] }}</td>
+                                    <td class="hidden-xs">{{ row.clas|e }}</td>
+                                    <td>{{ row.type|e }}</td>
+                                    <td>{{ row.id|e }}</td>
+                                    <td>{{ row.gets|e }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="7">
+                                    <ul class="pagination pull-right"></ul>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_logic %}
+    <!-- FooTable -->
+    <script src="../static/js/plugins/footable/footable.all.min.js"></script>
+
+    <!-- Page-Level Scripts -->
+    <script>
+        $(document).ready(function() {
+
+            $('.footable').footable();
+
+            $('#date_added').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true
+            });
+
+            $('#date_modified').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true
+            });
+
+        });
+
+    </script>
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>运行日记</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="active">
+                <strong>Diary</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "diary" %}

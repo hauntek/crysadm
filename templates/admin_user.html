@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if recent_login_users|length >0 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        最近访问用户
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="ibox-content">
+                        <div class="table-responsive table-bordered">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>用户名</th>
+                                    <th class="hidden-xs">创建时间</th>
+                                    <th class="hidden-xs">访问时间</th>
+                                    <th style="min-width: 95px;">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in recent_login_users %}
+
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ row.username|e }}</td>
+                                        <td class="hidden-xs">{{ row.created_time|e }}</td>
+
+                                        <td class="hidden-xs">{{ row.login_as_time|e }}</td>
+                                        <td>
+                                            <div style="display: inline-block">
+                                                <a href="/admin_user/{{ row.username|e }}" class="btn btn-outline btn-default btn-xs">编辑</a>
+                                            </div>
+                                            <form style="display: inline-block" role="form" action="/admin/login_as/{{ row.username|e }}" method="post">
+                                                <button type="submit" class="btn btn-outline btn-default btn-xs">登陆</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    系统用户列表
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div class="table-responsive table-bordered">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>用户名</th>
+                                <th class="hidden-xs">邮箱</th>
+                                <th class="hidden-xs">创建时间</th>
+                                <th class="hidden-xs">管理权限</th>
+                                <th class="hidden-xs">启用</th>
+                                <th class="hidden-xs">最大账户</th>
+                                <th class="hidden-xs">状态</th>
+                                <th style="min-width: 95px;">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in users %}
+
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ row.username|e }}</td>
+                                    <td class="hidden-xs">{{ row.email|e }}</td>
+                                    <td class="hidden-xs">{{ row.created_time|e }}</td>
+                                    <td class="hidden-xs">
+                                        {% if row.is_admin  %}
+                                            O
+                                        {% else %}
+                                            X
+                                        {% endif %}
+                                    </td>
+                                    <td class="hidden-xs">
+                                        {% if row.active  %}
+                                            O
+                                        {% else %}
+                                            X
+                                        {% endif %}
+                                    </td>
+                                    <td class="hidden-xs">{{ row.max_account_no|e }}</td>
+                                    <td class="hidden-xs">
+                                        {% if row.is_online  %}
+                                            <span class="label label-info">
+                                                在线
+                                            </span>
+                                        {% else %}
+                                            <span class="label label-danger">
+                                                离线
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div style="display: inline-block">
+                                            <a href="/admin_user/{{ row.username|e }}" class="btn btn-outline btn-default btn-xs">编辑</a>
+                                        </div>
+                                        <form style="display: inline-block" role="form" action="/admin/login_as/{{ row.username|e }}" method="post">
+                                            <button type="submit" class="btn btn-outline btn-default btn-xs">登陆</button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>用户管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                Admin
+            </li>
+            <li class="active">
+                <strong>User</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "admin_user" %}

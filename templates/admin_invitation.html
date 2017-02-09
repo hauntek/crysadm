@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    邀请码列表
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+
+                    <div class="table-responsive table-bordered">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>邀请链接</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for code in inv_codes %}
+
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>
+                                        {{ request.url_root }}register?inv_code={{ code.decode('utf-8')|e }}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- /.table-responsive -->
+
+                    <form role="form" style="display:inline-block;" action="/generate/inv_code" method="post">
+                        <button type="submit" style="border-radius: 0;" class="btn btn-success">生成邀请码</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    邀请码列表
+
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+
+                    <div class="table-responsive table-bordered">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>邀请链接</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for code in public_inv_codes %}
+
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>
+                                        {{ request.url_root }}register?inv_code={{ code.decode('utf-8')|e }}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- /.table-responsive -->
+
+                    <form role="form" style="display:inline-block;" action="/generate/pub_inv_code" method="post">
+                        <button type="submit" style="border-radius: 0;" class="btn btn-success">生成公开邀请码</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>邀请管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                Admin
+            </li>
+            <li class="active">
+                <strong>Invitation</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "admin_invitation" %}

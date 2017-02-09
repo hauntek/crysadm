@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 矿机速度
+
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div id="speed-stat-chart"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 最近7日产量
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div id="speed-vs-income"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 历史产量
+
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div id="last-30-day-chart"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> 最近7日速度
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div id="speed-comparison"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+
+{% endblock %}
+
+{% block js_logic %}
+    <script src="../static/js/plugins/highcharts/highcharts.js"></script>
+    <script>
+        function convert_to_yuan(crystal_values) {
+            if (crystal_values >= 10000) {
+                return parseInt(crystal_values / 1000) / 10 + '元';
+            }
+            return crystal_values;
+        }
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        $.getJSON('/analyzer/speed_comparison?random='+Math.random(), function (data) {
+            $('#speed-comparison').highcharts({
+                chart: {
+                    type: 'spline'
+
+                },
+                title: {
+                    text: '',
+                    x: -20 //center
+                },
+                credits: {
+                    enabled: false
+                },
+                yAxis: {
+                    title: {
+                        text: 'Speed (KB/s)'
+                    }, min: 0,
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                tooltip: {
+                    shared: true,
+                    valueSuffix: ' KB/s',
+                    crosshairs: true
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 1,
+                        marker: {
+                            lineWidth: 1,
+                            enabled: false
+                        }
+                    }
+                },
+
+                xAxis: {
+                    categories: data.category
+                },
+                series: data.value
+            });
+        });
+        $.getJSON('/analyzer/speed_stat_chart?random='+Math.random(),function(data){
+            $('#speed-stat-chart').highcharts({
+                chart: {
+                    type: 'areaspline'
+
+                },
+                title: {
+                    text: '',
+                    x: -20 //center
+                },
+                credits: {
+                    enabled: false
+                },
+                yAxis: {
+                    title: {
+                        text: 'Speed (KB/s)'
+                    },min: 0,
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                tooltip: {
+                    shared: true,
+                    valueSuffix: ' KB/s'
+                },
+                plotOptions: {
+                    areaspline: {
+                        stacking: 'normal',
+                        lineColor: '#666666',
+                        lineWidth: 1,
+                        marker: {
+                            lineWidth: 1,
+                            lineColor: '#666666',
+                            enabled: false
+                        }
+                    }
+                },
+
+                xAxis: {
+                    categories: data.category
+                },
+                series: data.value
+            });
+        });
+        $.getJSON('/analyzer/speed_vs_income?random='+Math.random(), function (data) {
+            $('#speed-vs-income').highcharts({
+
+                title: {
+                    text: '',
+                    x: -20 //center
+                },
+                legend: {
+                    enabled: false
+                },
+                credits: {
+                    enabled: false
+                },
+                yAxis: [{ // Secondary yAxis
+                    title: {
+                        text: '平均速度 KB/s'
+                    },
+                    min: 0,
+                    labels: {
+                        format: '{value}'
+                    },
+                    opposite: true
+                }, {
+                    title: {
+                        text: '产量'
+                    },
+                    plotLines: [{
+                        value: 0,
+                        width: 1
+                    }]
+                }],
+                tooltip: {
+                    formatter: function () {
+                        var r = ''+this.x;
+                        var s = '';
+                        var total = 0;
+                        $.each(this.points, function (i, point) {
+                            if(this.series.name == '平均速度')
+                                s += '<br/>' + this.series.name + ': <b>' + point.y +' KB/s</b>';
+                        });
+                        $.each(this.points, function (i, point) {
+                            if(point.y == 0){
+                                return;
+                            }
+                            if(this.series.name != '平均速度')
+                                s += '<br/>' + this.series.name + ': <b>' + convert_to_yuan(point.y) + '</b>';
+
+                            if(this.series.name != '产量' && this.series.name != '平均速度')
+                                total += point.y
+                        });
+                        if(total>0){
+                            r += '<br/>总收入: <b>' + convert_to_yuan(total) + '</b>';
+                        }
+                        r+=s;
+                        return r;
+                    },
+                    shared: true
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'normal'
+                    }
+                },
+
+                xAxis: {
+                    categories: data.category
+                },
+                series: data.series
+            });
+        });
+
+        $.getJSON('/analyzer/last_30_day?random='+Math.random(),function(data){
+            $('#last-30-day-chart').highcharts({
+                chart: {
+                    type: 'column',
+                    zoomType: 'x'
+                },
+                title: {
+                    text: '',
+                    x: -20 //center
+                },
+                legend: {
+                    enabled:false
+                },
+                credits: {
+                    enabled: false
+                },
+                yAxis: [{
+                    title: {
+                        text: '产量'
+                    }
+                }],
+                xAxis: {
+                    type: 'datetime'
+                },
+                series: [{
+                    name: '水晶产量',
+                    data: data.value
+                }]
+            });
+        });
+
+
+    </script>
+{% endblock %}
+
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>数据分析</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="active">
+                <strong>Analyzer</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "analyzer" %}

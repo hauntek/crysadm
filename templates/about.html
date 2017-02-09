@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:42px;">
+                    更新历史
+                </div>
+                <div class="ibox-content">
+                    <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
+
+                        <div class="vertical-timeline-block">
+                            <div class="vertical-timeline-icon blue-bg">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+
+                            <div class="vertical-timeline-content">
+                                <h2>Crysadm+ 更新日记 v2.1</h2>
+                                    <p>更新模板上的部分细节</p>
+                                    <ul>
+                                        <li>模板主题标题，右侧添加用户交流、加入群组按钮</li>
+                                        <li>调整关于页面排版问题</li>
+                                        <li>以及部分界面样式优化</li>
+                                    </ul>
+                                <button type="submit" class="btn btn-success" disabled> 下载源代码</button>
+                                <span class="vertical-date">
+                                    <small>1月29日</small>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="vertical-timeline-block">
+                            <div class="vertical-timeline-icon blue-bg">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+
+                            <div class="vertical-timeline-content">
+                                <h2>Crysadm+ 更新日记 v2.0</h2>
+                                    <p>不知不觉服务已经稳定运行一年了，今天更新下静态资源库</p>
+                                    <ul>
+                                        <li>前端网站静态资源库(static)，更新INSPINIA 2.7底版</li>
+                                        <li>更换继承简洁模板(横向菜单)，依照INSPINIA 2.7模板调整</li>
+                                        <li>右上角添加当前动态时间</li>
+                                        <li>以及部分界面样式优化</li>
+                                    </ul>
+                                <button type="submit" class="btn btn-success" disabled> 下载源代码</button>
+                                <span class="vertical-date">
+                                    <small>1月26日</small>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="vertical-timeline-block">
+                            <div class="vertical-timeline-icon blue-bg">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+
+                            <div class="vertical-timeline-content">
+                                <h2>Crysadm+ 更新日记 v1.12</h2>
+                                <p>准备2017年了，稍微更新了下静态资源库</p>
+                                <ul>
+                                    <li>前端网站静态资源库(static)，更新INSPINIA 2.5底版</li>
+                                    <li>更新继承模板整体代码，依照INSPINIA 2.5模板调整</li>
+                                    <li>更新邮件小图标提示，添加收纳框</li>
+                                    <li>dashboard页面 方块间距调整，顺便添加宝箱收益</li>
+                                    <li>运行日记分页显示,支持标题筛选</li>
+                                    <li>添加页面加载动态条</li>
+                                    <li>以及部分界面样式优化</li>
+                                </ul>
+                                <button type="submit" class="btn btn-success" disabled> 下载源代码</button>
+                                <span class="vertical-date">
+                                    <small>12月5日</small>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="vertical-timeline-block">
+                            <div class="vertical-timeline-icon blue-bg">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+
+                            <div class="vertical-timeline-content">
+                                <h2>Crysadm+ 更新日记 v1.6</h2>
+                                <p>这几天域名备案，估计这是今年最后一次更新了</p>
+                                <ul>
+                                    <li>添加自动进攻功能</li>
+                                    <li>添加自动复仇功能</li>
+                                    <li>添加计算ROOT密码</li>
+                                    <li>优化网页前端模板</li>
+                                    <li>优化后端功能框架</li>
+                                    <li>优化定位矿机逻辑</li>
+                                    <li>修复收益柱子错误</li>
+                                </ul>
+                                <button type="submit" class="btn btn-success" disabled> 下载源代码</button>
+                                <span class="vertical-date">
+                                    <small>4月26日</small>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="vertical-timeline-block">
+                            <div class="vertical-timeline-icon blue-bg">
+                                <i class="fa fa-file-text"></i>
+                            </div>
+
+                            <div class="vertical-timeline-content">
+                                <h2>Crysadm+ 更新日记 v1.4</h2>
+                                <p>更新太多地方了，大家自己下载源代码后看吧</p>
+                                <a href="https://github.com/hauntek/crysadm" class="btn btn-sm btn-success"> 下载源代码</a>
+                                <span class="vertical-date">
+                                    <small>4月14日</small>
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>关于</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="active">
+                <strong>About</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "about" %}

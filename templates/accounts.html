@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block css_block %}
+    <style>
+        @media (max-width: 640px) {
+            #add_account {
+                padding: 15px 20px 20px;
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12 .col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    添加迅雷水晶账号
+                </div>
+                <div class="ibox-content" id="add_account">
+                    <div class="row">
+                        {% if err_msg %}
+                            <div class="col-lg-12">
+                                <div class="alert alert-danger alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    {{ err_msg }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="col-lg-12">
+                            <form autocomplete="off" class="form-inline" role="form" action="/account/add" method="post">
+                                <div class="form-group">
+                                    <label for="input_name" class="sr-only">账号</label>
+                                    <input placeholder="crystal,crystal@xunlei.com" id="input_name" name="xl_username" autocomplete="off" class="form-control" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassowrd" class="sr-only">密码(不会明文保存)</label>
+                                    <input placeholder="password" id="inputPassowrd" name="xl_password" class="form-control" type="password" autocomplete="off">
+                                </div>
+                                <button type="submit" style="margin-bottom: 0px;" class="btn btn-white">确认</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    已添加账号
+                    {% if accounts|length >0 %}
+                        <form style="margin-left: 3px;float:right;" role="form" action="/account/inactive/all" method="post">
+                            <button type="submit" style="margin: 0px;" class="btn btn-outline btn-success btn-xs">所有账号停止</button>
+                        </form>
+                        <form style="margin-left: 3px;float:right;" role="form" action="/account/active/all" method="post">
+                            <button type="submit" style="margin: 0px;" class="btn btn-outline btn-success btn-xs">所有账号启用</button>
+                        </form>
+                    {% endif %}
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>账号</th>
+                                <th>用户名</th>
+                                <th>ID</th>
+                                <th>启用</th>
+                                <th>状态</th>
+                                <th>添加时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in accounts %}
+
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ row.account_name|e }}</td>
+                                    <td>{{ row.username|e }}</td>
+                                    <td>{{ row.user_id|e }}</td>
+                                    <td>
+                                        {% if row.active  %}
+                                            O
+                                        {% else %}
+                                            X
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ row.status|e }}</td>
+                                    <td>{{ row.createdtime|e }}</td>
+                                    <td>
+                                        <form style="float:left;margin-right: 10px;" role="form" action="/account/del/{{ row.user_id|e }}" method="post">
+                                            <button type="submit" onclick="javascript:return confirm('确认要删除此账号?')"  class="btn btn-outline btn-danger btn-xs">删除</button>
+                                        </form>
+
+                                        {% if row.active  %}
+                                            <form style="float:left;" role="form" action="/account/inactive/{{ row.user_id|e }}" method="post">
+                                                <button type="submit" class="btn btn-outline btn-default btn-xs">停止</button>
+                                            </form>
+                                        {% else %}
+                                            <form style="float:left;" role="form" action="/account/active/{{ row.user_id|e }}" method="post">
+                                                <button type="submit" class="btn btn-outline btn-success btn-xs">启用</button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+
+    </div>
+    <!-- /.row -->
+
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>迅雷账号</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="active">
+                <strong>Accounts</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "accounts" %}

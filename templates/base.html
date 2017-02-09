@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crysadm+</title>
+
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/font-awesome/css/font-awesome.css" rel="stylesheet">
+    {% block css_block %}{% endblock %}
+    <link href="../static/css/animate.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+
+</head>
+{% set navigation_bar = [
+    ('dashboard', '/dashboard', '监控中心', []),
+    ('analyzer', '/analyzer', '数据分析', []),
+    ('excavators', '/excavators', '我的矿机', []),
+    ('diary', '/diary', '运行日记', []),
+    ('accounts', '/#', '账号管理', [
+        ('accounts', '/accounts', '迅雷账号管理'),
+        ('profile', '/user/profile', '我的个人信息')
+    ]),
+] -%}
+{% set navigation_admin_bar = [
+    ('admin', '/#', '系统管理', [
+        ('admin_user', '/admin/user', '用户管理'),
+        ('admin_message', '/admin/message', '通知管理'),
+        ('admin_invitation', '/admin/invitation', '邀请管理')
+    ]),
+] -%}
+{% set navigation_all_bar = [
+    ('about', '/about', '关于', [])
+] -%}
+
+{% set active_page = active_page|default('index_temp') -%}
+<body class="top-navigation boxed-layout">
+
+    <div id="wrapper">
+        <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom white-bg">
+        <nav class="navbar navbar-static-top" role="navigation">
+            <div class="navbar-header">
+                <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                    <i class="fa fa-reorder"></i>
+                </button>
+                <a href="#" class="navbar-brand">Crysadm+</a>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    {% for id, href, caption, sub_navigation_bar in navigation_bar %}
+                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% endif %}>
+                        {% if sub_navigation_bar |length == 0 %}
+                        <a aria-expanded="false" role="button" href="{{ href |e }}"> {{ caption |e }}</a>
+                        {% else %}
+                        <a aria-expanded="false" role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }}
+                            <span class="caret"></span>
+                        </a>
+                        <ul role="menu" class="dropdown-menu">
+                            {% for id, href, caption in sub_navigation_bar %}
+                            <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href |e }}">{{ caption |e }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                    {% if session.user_info.is_admin %}
+                    {% for id, href, caption, sub_navigation_bar in navigation_admin_bar %}
+                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% endif %}>
+                        {% if sub_navigation_bar |length == 0 %}
+                        <a aria-expanded="false" role="button" href="{{ href |e }}"> {{ caption |e }}</a>
+                        {% else %}
+                        <a aria-expanded="false" role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }}
+                            <span class="caret"></span>
+                        </a>
+                        <ul role="menu" class="dropdown-menu">
+                            {% for id, href, caption in sub_navigation_bar %}
+                            <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href |e }}">{{ caption |e }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                    {% for id, href, caption, sub_navigation_bar in navigation_all_bar %}
+                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% endif %}>
+                        {% if sub_navigation_bar |length == 0 %}
+                        <a aria-expanded="false" role="button" href="{{ href |e }}"> {{ caption |e }}</a>
+                        {% else %}
+                        <a aria-expanded="false" role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }}
+                            <span class="caret"></span>
+                        </a>
+                        <ul role="menu" class="dropdown-menu">
+                            {% for id, href, caption in sub_navigation_bar %}
+                            <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href |e }}">{{ caption |e }}</a></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message" id="local"></span>
+                    </li>
+                    <li>
+                        <a href="/user/logout">
+                            <i class="fa fa-sign-out"></i> 登出
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        </div>
+        <div class="row wrapper border-bottom white-bg page-heading hidden-xs">
+            {% block navibar %}{% endblock %}
+            <div class="col-sm-8">
+                <div class="title-action">
+                    <a href="/talk" class="btn btn-white"><i class="fa fa-comments"></i> 用户交流</a>
+                    <a href="http://shang.qq.com/wpa/qunwpa?idkey=e2e0c56b649198bbea5caf1e678e907f1c8f54f23aabbf319f28faa183332576" class="btn btn-white"><i class="fa fa-qq"></i> 加入群组</a>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper wrapper-content">
+            {% block content %}{% endblock %}
+        </div>
+        <div class="footer">
+            <div class="pull-right">
+                <strong>Copyright</strong> powergx &copy; &azjcode 2015-
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="../static/js/jquery-3.1.1.min.js"></script>
+    <script src="../static/js/jquery.cookie.js"></script>
+    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="../static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="../static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+    <!-- Custom and plugin javascript -->
+    <script src="../static/js/inspinia.js"></script>
+    <script src="../static/js/plugins/pace/pace.min.js"></script>
+
+    <!-- Flot -->
+    <script src="../static/js/plugins/flot/jquery.flot.js"></script>
+    <script src="../static/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="../static/js/plugins/flot/jquery.flot.resize.js"></script>
+
+    <!-- ChartJS-->
+    <script src="../static/js/plugins/chartJs/Chart.min.js"></script>
+
+    <!-- Peity -->
+    <script src="../static/js/plugins/peity/jquery.peity.min.js"></script>
+
+    <!-- Peity demo -->
+    <script src="../static/js/demo/peity-demo.js"></script>
+
+    <script>
+        Date.prototype.Format = function (fmt) {
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+        function showTime() {
+            today = new Date().Format("yyyy-M-d h:m:s");
+            document.getElementById("local").innerHTML = today;
+        }
+        setInterval("showTime()", 1000);
+    </script>
+
+    {% block js_logic %}{% endblock %}
+
+</body>
+
+</html>

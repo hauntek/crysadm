@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block css_block %}
+    <link href="../static/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="../static/css/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="../static/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    已发送消息列表
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mail-box-header">
+                <h2>
+                    撰写消息
+                </h2>
+            </div>
+            <div class="mail-box">
+                <div class="mail-body">
+                    <form id="send_form" class="form-horizontal" action="/admin/message/send" method="post">
+                        <div class="form-group"><label class="col-sm-2 control-label">发送至:</label>
+                            <div class="col-sm-10"><input name="to" class="form-control" value="{{ session.user_info.username }}" placeholder="crystal@xunlei.com , mikey , all" type="text"></div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">主题:</label>
+                            <div class="col-sm-10"><input name="subject" placeholder="新通知,明天放假." class="form-control" value="" type="text"></div>
+                        </div>
+                        <div class="form-group"><label class="col-sm-2 control-label">简介:</label>
+                            <div class="col-sm-10"><input name="summary" placeholder="晴到多云转阴,有时有雨,可能雷电暴雨龙卷风." class="form-control" value="" type="text"></div>
+                        </div>
+                        <input type="hidden" id="content" name="content">
+                    </form>
+                </div>
+
+                <div class="mail-text h-200">
+                    <div class="summernote"></div>
+                </div>
+                <div class="mail-body text-right tooltip-demo">
+                    <a data-original-title="Send" id="send" href="#" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-reply"></i> Send</a>
+                    <a data-original-title="Discard email" href="#" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-times"></i> Discard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_logic %}
+    <!-- iCheck -->
+    <script src="../static/js/plugins/iCheck/icheck.min.js"></script>
+
+    <!-- SUMMERNOTE -->
+    <script src="../static/js/plugins/summernote/summernote.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+
+            $('.summernote').summernote();
+
+            $('#send').click(function (){
+                $('#content').val($('.summernote').code());
+                $('#send_form').submit();
+            });
+
+        });
+        var edit = function() {
+            $('.click2edit').summernote({focus: true});
+        };
+        var save = function() {
+            var aHTML = $('.click2edit').code(); //save HTML If you need(aHTML: array).
+            $('.click2edit').destroy();
+        };
+    </script>
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>通知管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                Admin
+            </li>
+            <li class="active">
+                <strong>Message</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "admin_message" %}

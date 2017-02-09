@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                        <li class="{% if action is none or action == 'info' %} active{% endif %}"><a href="#info" data-toggle="tab" aria-expanded="false">设备信息</a></li>
+                        <li class="{% if action == 'pattern' %} active{% endif %}"><a href="#pattern" data-toggle="tab" aria-expanded="false">挖矿模式</a></li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div class="tab-pane fade{% if action is none or action == 'info' %} active in{% endif %}" id="info">
+                            <br />
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">名称</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].device_name }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">状态</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].status }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">DCDN状态</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].dcdn_upnp_status }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">型号</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].hardware_model }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">版本</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].system_version }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">内网IP</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].lan_ip }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">外网IP</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].ip }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">序列号</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].device_sn }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">MAC地址</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].mac_address }}" disabled>
+                            </div>
+                            <div class="form-group input-group ">
+                                <span class="input-group-addon"><span style="width: 73px; display: inline-block;">DCDNID</span></span>
+                                <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].dcdn_id }}" disabled>
+                            </div>
+
+                            <form style="margin-right: 3px;float:left;" role="form" action="/device/reboot" method="post">
+                                <input type="hidden" name="device_id" value="{{ device_info.result[1].device_id }}" />
+                                <input type="hidden" name="session_id" value="{{ session_id }}" />
+                                <input type="hidden" name="account_id" value="{{ account_id }}" />
+                                <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要重启设备?')" class="btn btn-success">重启设备</button>
+                            </form>
+                            <form style="margin-right: 3px;float:left;" role="form" action="/{% if device_info.result[1].paused %}device/start{% else %}device/stop{% endif %}" method="post">
+                                <input type="hidden" name="device_id" value="{{ device_info.result[1].device_id }}" />
+                                <input type="hidden" name="session_id" value="{{ session_id }}" />
+                                <input type="hidden" name="account_id" value="{{ account_id }}" />
+                                {% if device_info.result[1].paused %}
+                                    <button type="submit" class="btn btn-success">启动设备</button>
+                                {% else %}
+                                    <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确定要暂停设备?')" class="btn btn-success">暂停设备</button>
+                                {% endif %}
+                            </form>
+                            {% if device_info.result[1].upgradeable %}
+                                <form style="margin-right: 3px;float:left;" role="form" action="/device/upgrade" method="post">
+                                    <input type="hidden" name="device_id" value="{{ device_info.result[1].device_id }}" />
+                                    <input type="hidden" name="session_id" value="{{ session_id }}" />
+                                    <input type="hidden" name="account_id" value="{{ account_id }}" />
+                                    <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要升级设备?')" class="btn btn-success">升级设备</button>
+                                </form>
+                            {% endif %}
+                            <form style="margin-left: 3px;float:right;" role="form" action="/device/reset" method="post">
+                                <input type="hidden" name="device_id" value="{{ device_info.result[1].device_id }}" />
+                                <input type="hidden" name="session_id" value="{{ session_id }}" />
+                                <input type="hidden" name="account_id" value="{{ account_id }}" />
+                                <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要恢复出厂设置?')" class="btn btn-danger">恢复出厂设置</button>
+                            </form>
+                            <form style="margin-left: 3px;float:right;" role="form" action="/device/noblink" method="post">
+                                <input type="hidden" name="device_id" value="{{ device_info.result[1].device_id }}" />
+                                <input type="hidden" name="session_id" value="{{ session_id }}" />
+                                <input type="hidden" name="account_id" value="{{ account_id }}" />
+                                <button type="submit" style="margin: 0px;" onclick="javascript:return alert('定位设备信息已传达')" class="btn btn-default">定位设备</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade{% if action == 'pattern' %} active in{% endif %}" id="pattern">
+                            <br />
+                            <form role="form" action="/" method="post">
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon"><span style="width: 73px; display: inline-block;">名称</span></span>
+                                    <input type="text" class="form-control" placeholder="" value="{{ device_info.result[1].device_name }}" disabled>
+                                </div>
+                                <div class="form-group input-group">
+                                    <span class="input-group-addon"><span style="width: 73px; display: inline-block;">时间</span></span>
+                                    <input type="text" class="form-control" value="{{ device_info.result[1].schedule_hours[0].from }}点至{{ device_info.result[1].schedule_hours[0].to }}点" disabled>
+                                    <span class="input-group-btn" style="padding-top: 0px;padding-bottom: 0px;">
+                                        {% if device_info.result[1].schedule_hours[0].type == 'unlimit' %}
+                                            <button type="submit" class="btn btn-success">全速模式</button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-success">智能模式</button>
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>设备管理</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li>
+                Excavators
+            </li>
+            <li class="active">
+                <strong>Info</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "excavators_info" %}

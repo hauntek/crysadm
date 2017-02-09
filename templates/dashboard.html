@@ -1,0 +1,695 @@
+{% extends "base.html" %}
+{% block css_block %}
+    <style>
+        @media (max-width: 992px) {
+            #expected_info>ul{
+                margin-top:0px;
+                margin-bottom:20px;
+                margin-left:10%;
+            }
+            #expected_info>ul >li{
+                display: inline-block;
+                width:30%;
+
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+
+    <div class="row">    
+        <div class="col-lg-3 col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right" style="padding-top: 5px;">实时</span>
+                    <h5>上传速度</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-arrow-circle-up fa-4x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right" style="padding-left: 5px;">
+                            <h1 class="no-margins" style=" font-weight: bold;" id="live_speed"></h1>
+                            <small style=" font-weight: bold;"><span id="speed_unit"></span>B/s</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right" style="padding-top: 5px;">实时</span>
+                    <h5>下载速度</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-arrow-circle-down fa-4x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right" style="padding-left: 5px;">
+                            <h1 class="no-margins" style=" font-weight: bold;" id="down_speed"></h1>
+                            <small style=" font-weight: bold;"><span id="speed2_unit"></span>B/s</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right" style="padding-top: 5px;">今日</span>
+                    <h5>水晶产量</h5>
+                </div>
+                <div class="ibox-content" style="height: 88px;">
+                    <div class="row">
+                        <div class="col-xs-12 text-right" style="padding-left: 5px;">
+                            <h1 style="font-size: 44px; font-weight: bold;" class="no-margins" id="pdc"></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right" style="padding-top: 5px;">今日</span>
+                    <h5>宝箱收益</h5>
+                </div>
+                <div class="ibox-content" style="height: 88px;">
+                    <div class="row">
+                        <div class="col-xs-12 text-right" style="padding-left: 5px;">
+                            <h1 style="font-size: 44px; font-weight: bold;" class="no-margins" id="b_pdc"></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right" style="padding-top: 5px;">本周</span>
+                    <h5>水晶产量</h5>
+                </div>
+                <div class="ibox-content" style="height: 88px;">
+                    <div class="row">
+                        <div class="col-xs-12 text-right" style="padding-left: 5px;">
+                            <h1 style="font-size: 44px; font-weight: bold;" class="no-margins" id="w_pdc"></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right" style="padding-top: 5px;">本月</span>
+                    <h5>水晶产量</h5>
+                </div>
+                <div class="ibox-content" style="height: 88px;">
+                    <div class="row">
+                        <div class="col-xs-12 text-right" style="padding-left: 5px;">
+                            <h1 style="font-size: 44px; font-weight: bold;" class="no-margins" id="m_pdc"></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-warning pull-right" style="padding-top: 5px;">余额</span>
+                    <h5>账户资金</h5>
+                </div>
+                <div class="ibox-content" style="height: 88px;">
+                    <div class="row">
+                        <div class="col-xs-12 text-right" style="padding-left: 5px;">
+                            <h1 style="font-size: 44px; font-weight: bold;" class="no-margins" id="balance"></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right" style="padding-top: 5px;">收入</span>
+                    <h5>账户资金</h5>
+                </div>
+                <div class="ibox-content" style="height: 88px;">
+                    <div class="row">
+                        <div class="col-xs-12 text-right" style="padding-left: 5px;">
+                            <h1 style="font-size: 44px; font-weight: bold;" class="no-margins" id="income"></h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    {% if not user_info.auto_column %}
+                        <h5>同比产量 (默认统计)</h5>
+                    {% else %}
+                        <h5>同比产量 (迅雷统计)</h5>
+                    {% endif %}
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div id="DoD-income" style="height: 200px;min-width: 300px;"></div>
+                        </div>
+                        <div class="col-md-2" id="expected_info">
+                            <ul class="stat-list" style="margin-top:15px;">
+                                <li>
+                                    <h2 class="no-margins " id="dod_income">-</h2>
+                                    <small>昨日同比产量</small>
+                                </li>
+                                <li>
+                                    <h2 class="no-margins" id="last_day_income">-</h2>
+                                    <small>昨日总产量</small>
+                                </li>
+                                <li>
+                                    <h2 class="no-margins " id="expected_income">-</h2>
+                                    <small>今日预计产量</small>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div>
+                        <span class="pull-right text-right">
+                            <small>实时矿机上传速度<strong></strong></small>
+                            <br>
+                        </span>
+                        <h3 class="font-bold no-margins">速度分析器</h3>
+                        <small></small>
+                    </div>
+                    <div id="speed-share" style="height: 200px;min-width: 300px;"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <!-- /.col-lg-6 -->
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div>
+                        <span class="pull-right text-right">
+                            <small>今日矿场产量<strong></strong></small>
+                            <br>
+                        </span>
+                        <h3 class="font-bold no-margins">产量分析器</h3>
+                        <small></small>
+                    </div>
+                    <div id="today-income-share" style="height: 200px;min-width: 300px;"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <!-- /.col-lg-6 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div>
+                        <span class="pull-right text-right">
+                            <small>实时速度<strong></strong></small>
+                            <br>
+                        </span>
+                        <h3 class="font-bold no-margins"></h3>
+                        <small></small>
+                    </div>
+                    <div id="real_time_speed" style="height: 150px;"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div>
+                        <span class="pull-right text-right">
+                            <small>矿机实时速度<strong></strong></small>
+                            <br>
+                        </span>
+                        <h3 class="font-bold no-margins"></h3>
+                        <small></small>
+                    </div>
+                    <div id="speed_detail" style="height: 300px;"></div>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js_logic %}
+    <script src="../static/js/plugins/highcharts/highcharts.js"></script>
+    <script>
+        function convert_to_yuan(crystal_values) {
+            if (crystal_values >= 10000) {
+                return parseInt(crystal_values / 1000) / 10 + '元';
+            }
+            if (crystal_values >= 1000) {
+                return parseInt(crystal_values / 100) / 100 + '元';
+            }
+            return crystal_values + '个';
+        }
+        function convert_speed(speed) {
+            if (speed >= 1024) {
+                return parseInt(speed / 1024*100) / 100;
+            }
+            return speed;
+        }
+
+        var flash_element = function(jquery_obj){
+            jquery_obj.css('margin','0');
+            jquery_obj.addClass('animated');
+            jquery_obj.addClass('flash');
+            setTimeout(function() {
+                jquery_obj.removeAttr('class').attr('class', '');
+            }, 2000)
+        }
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+        var getHiddenIdSetting = function(){
+            var hidden_id_cookie = $.cookie('hidden_id');
+            if (hidden_id_cookie  == undefined || hidden_id_cookie ==null){
+                return false;
+            }
+            return hidden_id_cookie === 'true';
+
+        }
+        var hidden_id = getHiddenIdSetting();
+
+        var load_speed_share = function(){
+            $.getJSON('/dashboard/speed_detail?random='+Math.random(),function(r_data) {
+                $('#speed_detail').highcharts({
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: r_data.categories
+                    },
+                    yAxis: [{
+                        min: 0,
+                        title: {
+                            text: '速度KB/s'
+                        }
+                    }],
+                    credits: {
+                        enabled: false
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        shared: true,
+                        valueSuffix: ' KB/s'
+                    },
+                    plotOptions: {
+                        column: {
+                            grouping: false,
+                            shadow: false,
+                            borderWidth: 0,
+                            animation: false
+                        }
+                    },
+                    series: r_data.series
+                });
+            });
+            $.getJSON('/dashboard/speed_share?random='+Math.random(),function(r_data) {
+
+                var colors = Highcharts.getOptions().colors,
+                        data = r_data.data,
+                        browserData = [],
+                        versionsData = [];
+                // Build the data arrays
+                for (var i = 0; i < data.length; i += 1) {
+                    browserData.push({
+                        name: data[i].name,
+                        y: data[i].value,
+                        color: colors[i]
+                    });
+
+                    for (var j = 0; j < data[i].drilldown_data.length; j += 1) {
+                        var brightness = 0.2 - (j / data[i].drilldown_data.length) / 5;
+                        versionsData.push({
+                            name: data[i].drilldown_data[j].name,
+                            y: data[i].drilldown_data[j].value,
+                            color: Highcharts.Color(colors[i]).brighten(brightness).get()
+                        });
+                    }
+                }
+
+                $('#speed-share').highcharts({
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    plotOptions: {
+                        pie: {
+                            shadow: false,
+                            center: ['50%', '50%'],
+                            animation: false
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        valueSuffix: ' KB/s'
+                    },
+                    series: [{
+                        name: '上传速度',
+                        data: browserData,
+                        size: '60%',
+                        dataLabels: {
+                            formatter: function () {
+                                var total = 0, percentage;
+                                $.each(this.series.data, function() {
+                                    total+=this.y;
+                                });
+
+                                percentage=((this.y/total)*100).toFixed(1);
+
+                                if (hidden_id){
+                                    if (data.length > 3)
+                                        return percentage > 20 ? '矿主ID:XXXXXXX' : null;
+                                    else
+                                        return percentage > 10 ? '矿主ID:XXXXXXX' : null;
+                                }
+                                if (data.length > 3)
+                                    return percentage > 20 ? this.point.name : null;
+                                else
+                                    return percentage > 10 ? this.point.name : null;
+                            },
+                            distance: -5
+                        }
+                    }, {
+                        name: '上传速度',
+                        data: versionsData,
+                        size: '100%',
+                        innerSize: '55%',
+                        dataLabels: {
+                            formatter: function () {
+                                var total = 0, percentage;
+                                $.each(this.series.data, function() {
+                                    total+=this.y;
+                                });
+
+                                percentage=((this.y/total)*100).toFixed(1);
+
+                                // display only if larger than 1
+                                if (hidden_id){
+                                    return percentage > 1 ? '<b>矿机:</b> ' + this.y + ' KB/s' : null;
+                                }
+
+                                return percentage > 1 ? '<b>' + this.point.name + ':</b> ' + this.y + ' KB/s' : null;
+                            }
+                        }
+                    }]
+                });
+            });
+        }
+        var load_today_income_share = function() {
+            $.getJSON('/dashboard/today_income_share?random='+Math.random(), function (data) {
+                $('#today-income-share').highcharts({
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: ''
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.y}</b>'
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                formatter: function () {
+
+                                    if (hidden_id){
+                                        return '<b>矿主ID:XXXXXXX</b>: '+parseInt(this.point.percentage*10)/10 +' %';
+                                    }
+
+                                    return '<b>'+this.point.name+'</b>: '+parseInt(this.point.percentage*10)/10 +' %';
+                                }
+                            },
+                            animation: false
+                        }
+                    },
+                    series: [{
+                        name: "产量",
+                        colorByPoint: true,
+                        data: data.data
+                    }]
+                });
+            });
+        }
+        var load_static_chart = function() {
+            $.getJSON('/dashboard/DoD_income?random='+Math.random(), function (data) {
+                $('#DoD-income').highcharts({
+                    chart:{
+                        type: 'column',
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: '',
+                        x: -20 //center
+                    },
+                    xAxis: {
+                        categories: ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00", "24:00"]
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '产量'
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    tooltip: {
+                        shared: true,
+                        crosshairs: true
+                    },
+                    plotOptions: {
+                        column: {
+                            grouping: false,
+                            shadow: false,
+                            borderWidth: 0,
+                            animation: false
+                        }
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'left',
+                        verticalAlign: 'top',
+                        x: 55,
+                        y: -10,
+                        floating: true
+                    },
+                    series: data.series
+                });
+                $('#last_day_income').html(data.data.last_day_income);
+                $('#dod_income').html(data.data.dod_income_value);
+                $('#expected_income').html(data.data.expected_income);
+
+            });
+
+        }
+        $('#real_time_speed').highcharts({
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginBottom: 40
+
+            },credits: {
+                enabled: false
+            },
+            title: {
+                text: '',
+                x: -20 //center
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function () {
+                    return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                            Highcharts.numberFormat(this.y, 0)+' KB/s';
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'speed',
+                data: (function () {
+                    // generate an array of random data
+                    var data = [],
+                            time = (new Date()).getTime(),
+                            i;
+
+                    for (i = -24; i <= 0; i += 1) {
+                        data.push({
+                            x: time + i * 5000,
+                            y: null
+                        });
+                    }
+                    return data;
+                }())
+            }]
+        });
+
+
+
+        var reload_data = function(){
+            load_speed_share();
+            $.getJSON( "/dashboard_data?random="+Math.random(), function( data ) {
+                $('#real_time_speed').highcharts().series[0].addPoint([(new Date()).getTime(),data.today_data.last_speed], true, true);
+                if($('#live_speed').html() !== convert_speed(data.today_data.last_speed)){
+                    $('#live_speed').html(convert_speed(data.today_data.last_speed));
+
+                    if(data.today_data.last_speed >= 1024){
+                        $('#speed_unit').html('M')
+                    }else{
+                        $('#speed_unit').html('K')
+                    }
+                    flash_element($('#live_speed'));
+                }
+                if($('#down_speed').html() !== convert_speed(data.today_data.deploy_speed)){
+                    $('#down_speed').html(convert_speed(data.today_data.deploy_speed));
+
+                    if(data.today_data.deploy_speed >= 1024){
+                        $('#speed2_unit').html('M')
+                    }else{
+                        $('#speed2_unit').html('K')
+                    }
+                    flash_element($('#down_speed'));
+                }
+                if($('#pdc').html() !== convert_to_yuan(data.today_data.pdc)) {
+                    $('#pdc').html(convert_to_yuan(data.today_data.pdc));
+                    flash_element($('#pdc'));
+                }
+                if($('#b_pdc').html() !== convert_to_yuan(data.today_data.box_pdc)) {
+                    $('#b_pdc').html(convert_to_yuan(data.today_data.box_pdc));
+                    flash_element($('#b_pdc'));
+                }
+                if($('#w_pdc').html() !== convert_to_yuan(data.today_data.w_pdc)) {
+                    $('#w_pdc').html(convert_to_yuan(data.today_data.w_pdc));
+                    flash_element($('#w_pdc'));
+                }
+                if($('#m_pdc').html() !== convert_to_yuan(data.today_data.m_pdc)) {
+                    $('#m_pdc').html(convert_to_yuan(data.today_data.m_pdc));
+                    flash_element($('#m_pdc'));
+                }
+                if($('#balance').html() !== convert_to_yuan(data.today_data.balance)) {
+                    $('#balance').html(convert_to_yuan(data.today_data.balance));
+                    flash_element($('#balance'));
+                }
+                if($('#income').html() !== convert_to_yuan(data.today_data.income)) {
+                    $('#income').html(convert_to_yuan(data.today_data.income));
+                    flash_element($('#income'));
+                }
+            })
+        }
+
+        var reload_data_ten_minutes = function(){
+            load_static_chart();
+            load_today_income_share();
+
+        }
+        $(document).ready(function(){
+            $('#real_time_speed').highcharts().series[0].addPoint([(new Date()).getTime(),0], true, true);
+            reload_data();
+            reload_data_ten_minutes();
+            setInterval(reload_data_ten_minutes,60*1000*10);
+            setInterval(reload_data,30000);
+
+        });
+
+        $(document).keydown(function(e){
+            if(e.which == 88 ||e.which ==16){
+                $.cookie('hidden_id',!hidden_id);
+                hidden_id=!hidden_id;
+            }
+            load_speed_share();
+            load_today_income_share();
+        });
+
+    </script>
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>监控中心</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="active">
+                <strong>Dashboard</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "dashboard" %}

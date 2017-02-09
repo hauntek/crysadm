@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block css_block %}
+    <link href="../static/css/plugins/iCheck/custom.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+
+    <div class="row">
+        <form role="form" action="/message/action" method="post">
+            <div class="col-lg-12 animated fadeInRight">
+                <div class="mail-box-header">
+                    <div class="mail-tools tooltip-demo m-t-md" style="margin-top: 0px;">
+                        <a href="/messagebox" data-original-title="Refresh inbox" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-refresh"></i> Refresh</a>
+                        <button type="submit" name="btn" value="mark_as_read" data-original-title="Mark as read" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-eye"></i> </button>
+                        <button type="submit" name="btn" value="delete" data-original-title="Move to trash" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title=""><i class="fa fa-trash-o"></i> </button>
+                    </div>
+                </div>
+                <div class="mail-box">
+                    <table class="table table-hover table-mail">
+                        <tbody>
+                        {% for row in messages %}
+                            <tr class="{% if row.is_read %}read{% else %}unread{% endif %}">
+                                <td class="check-mail">
+                                    <input name="msg,{{ row.id }}" type="checkbox" class="i-checks">
+                                </td>
+                                <td class="mail-ontact">{{ row.subject }}</td>
+                                <td class="mail-subject">{{ row.content |safe }}</td>
+                                <td class="text-right mail-date"><em>{{ row.time }}</em></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- /.row -->
+
+{% endblock %}
+
+{% block js_logic %}
+
+    <script src="../static/js/plugins/iCheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>通知中心</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="active">
+                <strong>Notification</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}

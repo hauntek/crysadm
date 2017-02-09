@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="row">
+        {% if err_msg %}
+            <div class="col-lg-12">
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ err_msg|safe }}
+                </div>
+            </div>
+        {% endif %}
+        {% if info_msg %}
+            <div class="col-lg-12">
+                <div class="alert alert-info alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    {{ info_msg|safe }}
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:42px;">
+                    今日统计
+                    {% if accounts|length >0 %}
+                        {% if show_drawcash %}
+                            <form role="form" style="margin-left: 3px;float:right;" action="/drawcash/all" method="post">
+                                <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要所有账号提现?')" class="btn btn-info btn-xs">所有账号提现</button>
+                            </form>
+                        {% endif %}
+                        <form role="form" style="margin-left: 3px;float:right;" action="/getaward/all" method="post">
+                            <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要所有账号转盘?')" class="btn btn-info btn-xs">所有账号转盘</button>
+                        </form>
+                        <form role="form" style="margin-left: 3px;float:right;" action="/collect/all" method="post">
+                            <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要收取所有水晶?')" class="btn btn-info btn-xs">收取所有水晶</button>
+                        </form>
+                    {% endif %}
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="col-md-1">矿主ID</th>
+                                <th class="col-md-1">水晶产量</th>
+                                <th class="col-md-1 hidden-xs">秘银产量</th>
+                                <th class="col-md-1 hidden-xs">秘银存量</th>
+                                <th class="col-md-1 hidden-xs">宝箱</th>
+                                <th class="col-md-1 hidden-xs">未收取</th>
+                                <th class="col-md-1">今日收益</th>
+                                <th class="col-md-1">余额</th>
+                                <th class="col-md-1">总收入</th>
+                                <th class="col-md-2 col-xs-1">更新时间</th>
+                                <th class="col-md-1" style="text-align:right;{% if show_drawcash %} min-width:180px;{% else %} min-width:140px;{% endif %}">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in accounts %}
+                                {% if row.data is defined and row.data.mine_info.r == 0 %}
+                                    <tr class="tooltip-demo">
+                                        <td data-original-title="{% if row.session_id|length == 128 %}Advanced{% else %}Standard{% endif %}" data-toggle="tooltip" data-placement="top" >{{ row.data.privilege.mid |e }}</td>
+                                        <td>{{ row.data.mine_info.dev_m.pdc |default('0') }}</td>
+                                        <td class="hidden-xs">{{ row.data.mine_info.td_s |e }}</td>
+                                        <td class="hidden-xs">{{ row.data.mine_info.s |e }}</td>
+                                        <td class="hidden-xs">{{ row.data.mine_info.td_box_pdc |e }}</td>
+                                        <td class="hidden-xs">{{ row.data.mine_info.td_not_in_a |e }}</td>
+                                        <td>{{ row.data.mine_info.td_c |default('0') }}</td>
+                                        <td>{{ convert_to_yuan(row.data.income.r_can_use | default(0)) |e }}</td>
+                                        <td>{{ convert_to_yuan(row.data.income.r_h_a | default(0))| e }}</td>
+                                        <td class="hidden-xs">{{ row.data.updated_time }}</td>
+                                        <td class="visible-xs">{{ row.data.updated_time.split(' ')[1] }}</td>
+                                        <td>
+                                            {% if show_drawcash %}
+                                                <form role="form" style="margin-left: 3px;float:right;" action="/drawcash/{{ row.user_id|e }}" method="post">
+                                                    <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要提现?')" class="btn btn-info btn-xs">提现</button>
+                                                </form>
+                                            {% endif %}
+                                            <form role="form" style="margin-left: 3px;float:right;" action="/getaward/{{ row.user_id|e }}" method="post">
+                                                <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要转盘一次?')" class="btn btn-info btn-xs">转盘</button>
+                                            </form>
+                                            <form role="form" style="margin-left: 3px;float:right;" action="/searcht/{{ row.user_id|e }}" method="post">
+                                                <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要进攻一次?')" class="btn btn-info btn-xs">进攻</button>
+                                            </form>
+                                            <form role="form" style="margin-left: 3px;float:right;" action="/collect/{{ row.user_id|e }}" method="post">
+                                                <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要收取水晶?')" class="btn btn-info btn-xs">收取</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                                <!-- /.row -->
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title" style="height:42px;">
+                    设备信息
+                </div>
+                <!-- /.panel-heading -->
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table" name="miner_list">
+                            <thead>
+                            <tr>
+                                <th >#</th>
+                                <th class="col-md-1" style="min-width: 60px;">矿主ID</th>
+                                <th class="col-md-1" style="min-width: 60px;">矿机名</th>
+                                <th class="col-md-1 hidden-xs" style="min-width: 50px;">类型</th>
+                                <th class="col-md-1 hidden-xs" style="min-width: 70px;">固件版本</th>
+                                <th class="col-md-1" style="min-width: 70px;"><i class="fa fa-arrow-circle-up"></i> (KB/s)</th>
+                                <th class="col-md-1" style="min-width: 70px;"><i class="fa fa-arrow-circle-down"></i> (KB/s)</th>
+                                <th class="col-md-1" style="min-width: 60px;"><i class="fa fa-hdd-o"></i> (GB)</th>
+                                <th class="col-md-1">状态</th>
+                                <th class="col-md-1 hidden-xs" style="min-width: 110px;">UPNP</th>
+                                <th class="col-md-1 hidden-xs">IP</th>
+                                <th class="col-md-1 hidden-xs">ROOT密码</th>
+                                <th class="col-md-1" style="text-align:right; min-width:130px;">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for row in accounts %}
+                                {% if row.data is defined %}
+                                    {% for dev in row.data.device_info%}
+                                        {% if dev.dcdn_clients|length == 0 %}
+                                            <tr {% if loop.first %} style="background-color: #F9F9F9;" {% endif %}>
+                                                <td >{{ dev.dcdn_id }}{{ dev.account_name }}{{ row.session_id }}</td>
+                                                <td >
+                                                    {% if loop.first %}
+                                                        {{ row.data.privilege.mid |e }}
+                                                    {% endif %}
+                                                </td>
+                                                <td readonly="readonly">
+                                                    {{ dev.device_name}}
+                                                </td>
+                                                <td class="hidden-xs">
+                                                    {{ get_device_type(dev.product_id, dev.hardware_model) |e }}
+                                                </td>
+                                                <td class="hidden-xs">
+                                                    {{ dev.system_version |e }}
+                                                </td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td {% if dev.upgradeable %} style="min-width: 120px;" {% endif %}>
+                                                    {% if dev.status == 'online' %}
+                                                        <span class="label label-info">
+                                                                在线
+                                                                </span>
+                                                    {% else %}
+                                                        <span class="label label-warning">
+                                                                断网
+                                                                </span>
+                                                    {% endif %}
+                                                    {% if dev.upgradeable %}
+                                                        <span class="label label-danger">
+                                                                有升级
+                                                                </span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="hidden-xs">{{ dev.dcdn_upnp_message |e }}</td>
+                                                <td class="hidden-xs">{{ dev.ip |e }}</td>
+                                                <td class="hidden-xs">{{ get_device_root(dev.device_sn, dev.mac_address) |e }}</td>
+                                                <td>
+
+                                                </td>
+                                            </tr>
+                                        {% else %}
+                                            {% for detail in dev.dcdn_clients %}
+                                                <tr {% if loop.first %} style="background-color: #F9F9F9;" {% endif %}>
+                                                    <td >{{ dev.dcdn_id }}{{ dev.account_name }}{{ row.session_id }}</td>
+                                                    <td >
+                                                        {% if loop.first %}
+                                                            {{ row.data.privilege.mid |e }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td readonly="readonly">
+                                                        {{ dev.device_name}}
+                                                    </td>
+                                                   <td class="hidden-xs">
+                                                        {{ get_device_type(dev.product_id, dev.hardware_model) |e }}
+                                                   </td>
+                                                   <td class="hidden-xs">
+                                                        {{ dev.system_version |e }}
+                                                   </td>
+                                                    <td>{{ (detail.upload_speed|int/1024)|int }}/{{ (detail.upload_speed_max|int/1024)|int }}</td>
+                                                    <td>{{ (detail.download_speed|int/1024)|int }}/{{ (detail.download_speed_max|int/1024)|int }}</td>
+                                                    <td>{{ (detail.space_used|int/1024/1024/1024)|int }}/{{ (detail.space_quota|int/1024/1024/1024)|int }}</td>
+                                                    <td {% if dev.upgradeable %} style="min-width: 120px;" {% endif %}>
+                                                        {% if detail.status == 'running' %}
+                                                            <span class="label label-info">
+                                                                正常
+                                                                </span>
+                                                        {% else %}
+                                                            <span class="label label-warning">
+                                                                断网
+                                                                </span>
+                                                        {% endif %}
+                                                        {% if dev.upgradeable %}
+                                                            <span class="label label-danger">
+                                                                有升级
+                                                                </span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="hidden-xs">{{ dev.dcdn_upnp_message |e }}</td>
+                                                    <td class="hidden-xs">{{ dev.ip |e }}</td>
+                                                    <td class="hidden-xs">{{ get_device_root(dev.device_sn, dev.mac_address) |e }}</td>
+                                                    <td>
+                                                        {% if loop.first %}
+                                                            <form style="margin-left: 3px;float:right;" role="form" action="/admin_device" method="post">
+                                                                <input type="hidden" name="device_id" value="{{ dev.device_id }}" />
+                                                                <input type="hidden" name="account_id" value="{{ dev.account_name }}" />
+                                                                <input type="hidden" name="session_id" value="{{ row.session_id }}" />
+                                                                <button type="submit" style="margin: 0px;" class="btn btn-info btn-xs">管理</button>
+                                                            </form>
+                                                        {% endif %}
+                                                        <button type="submit" style="margin-left: 3px;float:right;" class="btn btn-info btn-xs" onclick="window.open('http://kj.xunlei.com/setting.html?user_id={{ row.user_id|e }}&session_id={{ row.session_id }}&device_id={{ dev.device_id }}');return false;">矿机设置</button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                                <!-- /.row -->
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_logic %}
+    <script src="../static/js/plugins/jquery-tabledit/jquery.tabledit.js"></script>
+    <script>
+        // Example #3
+        $('table[name="miner_list"]').Tabledit({
+            url: '/set_device_name',
+            eventType: 'dblclick',
+            editButton: false,
+            deleteButton: false,
+            hideIdentifier: true,
+            columns: {
+                identifier: [0, 'url'],
+                editable: [[2, 'name']]
+            },
+            onDraw: function() {
+                console.log('onDraw()');
+            },
+            onSuccess: function(data, textStatus, jqXHR) {
+                console.log('onSuccess(data, textStatus, jqXHR)');
+                console.log(data);
+                console.log(textStatus);
+                console.log(jqXHR);
+            },
+            onFail: function(jqXHR, textStatus, errorThrown) {
+                console.log('onFail(jqXHR, textStatus, errorThrown)');
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+            },
+            onAlways: function() {
+                console.log('onAlways()');
+            },
+            onAjax: function(action, serialize) {
+                console.log('onAjax(action, serialize)');
+                console.log(action);
+                console.log(serialize);
+            }
+        });
+
+    </script>
+{% endblock %}
+
+{% block navibar %}
+    <div class="col-sm-4">
+        <h2>我的矿机</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <li class="active">
+                <strong>Excavators</strong>
+            </li>
+        </ol>
+    </div>
+{% endblock %}
+{% set active_page = "excavators" %}
