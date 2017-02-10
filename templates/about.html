@@ -6,6 +6,29 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title" style="height:42px;">
                     更新历史
+                    {% if session.user_info.is_admin %}
+                        <button type="button" style="margin-left: 3px;float:right;" class="btn btn-xs btn-white" onclick="insp_update()" data-toggle="modal" data-target="#update">检查及更新</button>
+                        <form role="form" style="margin-left: 3px;float:right;" action="/admin/update" method="post">
+                            <div class="modal inmodal" id="update" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content animated fadeIn">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                            <h4 class="modal-title">项目更新</h4>
+                                            <small class="font-bold">该操作执行后会备份根目录源代码，是否更新？</small>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p id="insp_update"></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                                            <button type="submit" class="btn btn-primary">更新</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    {% endif %}
                 </div>
                 <div class="ibox-content">
                     <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
@@ -119,6 +142,29 @@
             </div>
         </div>
     </div>
+
+{% endblock %}
+
+{% block js_logic %}
+    {% if session.user_info.is_admin %}
+    <script>
+    function insp_update() {
+        document.getElementById("insp_update").innerHTML = '';
+        $.ajax({
+            type: "POST",
+            url: "/admin/insp_update",
+            dataType: "json",
+            success: function (data) {
+                for (var i = 0;i < data.result.length; i++) {
+                    var file = '发现更新的文件：' + data.result[i].file + "<br/>";
+                    document.getElementById("insp_update").innerHTML+=file;
+                }
+                document.getElementById("insp_update").innerHTML+="<br/>" + "总共：" + data.result.length + "文件";
+            }
+        });
+    };
+    </script>
+    {% endif %}
 {% endblock %}
 
 {% block navibar %}
