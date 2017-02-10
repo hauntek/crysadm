@@ -145,7 +145,7 @@ def update(backups=True):
             if os.path.exists('.backups'):
                 shutil.rmtree('.backups')
             shutil.copytree('.', '.backups')
-            threading.Thread(target=down_thread, args=(url, data_list)).start()
+        threading.Thread(target=down_thread, args=(url, data_list)).start()
     else:
         return '本地源代码和云端一致，无需更新'
 
