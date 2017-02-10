@@ -12,7 +12,6 @@ import threading
 service_url = 'http://down.crysadmapp.cn/crysadm'
 # service_url = 'https://github.com/hauntek/crysadm/raw/master/'
 rootdir = '.' # 脚本当前路径
-ignore_path = ['.backups'] # 忽略目录
 ignore_file = [] # 忽略文件
 
 if os.path.exists('filemd5.txt'):
@@ -25,8 +24,11 @@ def urlretrieve(url, filename):
     urllib.request.urlretrieve(url, filename) 
 
 def Snapshot(path):
+    car = list()
     f = open(path, "r")
-    car = f.read()
+    for line in f.readlines():
+        data = json.loads(line.strip())
+        car.append(data)
     f.close()
     return car
 
@@ -52,10 +54,6 @@ def md5Checksum(filePath):
 def Checksum(rootdir='.', check=False):
     data_list = list()
     for parent, dirnames, filenames in os.walk(rootdir):
-        path = parent.replace('\\', '/') # 路径转换
-        path = path.replace(rootdir + '/', '') # 根目录转换
-        if path in ignore_path: continue
-
         for filename in filenames:
             file = os.path.join(parent, filename)
             md5 = md5Checksum(file)
@@ -105,13 +103,13 @@ def insp_update():
         for b_date in data:
             data_info = json.loads(b_date.decode('utf-8'))
             if data_info['file'] in ignore_file: continue
-            if data_info['md5'] in data_file: continue
+            if data_info in data_file: continue
             data_list.append(data_info)
             print('发现更新文件：' % data_info['file'])
     except Exception as e:
         return '云端对比文件出现错误，请稍后重试'
 
-    return json.dumps(dict(result=data_list))
+    return data_list
 
 def update(backups=True):
 
@@ -127,7 +125,7 @@ def update(backups=True):
         for b_date in data:
             data_info = json.loads(b_date.decode('utf-8'))
             if data_info['file'] in ignore_file: continue
-            if data_info['md5'] in data_file: continue
+            if data_info in data_file: continue
             data_list.append(data_info)
             print('发现更新文件：%s' % data_info['file'])
     except Exception as e:
