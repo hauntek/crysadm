@@ -83,7 +83,8 @@ def down_thread(url, data_list):
             dirpath = filename.replace(fname, '/' + fname)
             dirpath = dirpath.split('//')[0]
             if not os.path.exists(dirpath):
-                os.makedirs(dirpath)
+                if fname != filename:
+                    os.makedirs(dirpath)
             urlretrieve(urls, filename)
     except Exception as e:
         pass
