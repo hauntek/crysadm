@@ -89,7 +89,8 @@ def down_thread(url, data_list):
             dirpath = filename.replace(fname, '/' + fname)
             dirpath = dirpath.split('//')[0]
             if not os.path.exists(dirpath):
-                os.makedirs(dirpath)
+                if fname != filename:
+                    os.makedirs(dirpath)
             urlretrieve(urls, filename)
             number += 1
             progress = number / len(data_list) * 100 # 百分比进度算法
