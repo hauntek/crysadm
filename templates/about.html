@@ -156,14 +156,18 @@
             url: "/admin/insp_update",
             dataType: "json",
             success: function (data) {
-                for (var i = 0;i < data.result.length; i++) {
-                    var file = '发现更新的文件：' + data.result[i].file + "<br/>";
-                    document.getElementById("insp_update").innerHTML+=file;
-                }
-                if (data.result.length == 0) {
-                    document.getElementById("insp_update").innerHTML="本地源代码和云端一致，无需更新";
+                if (data.r == 'ok') {
+                    if (data.list.length == 0) {
+                        document.getElementById("insp_update").innerHTML="本地源代码和云端一致，无需更新";
+                    } else {
+                        for (var i = 0;i < data.list.length; i++) {
+                            var file = '发现更新的文件：' + data.list[i].file + "<br/>";
+                            document.getElementById("insp_update").innerHTML+=file;
+                        }
+                        document.getElementById("insp_update").innerHTML+="<br/>" + "总共：" + data.list.length + "文件";
+                    }
                 } else {
-                    document.getElementById("insp_update").innerHTML+="<br/>" + "总共：" + data.result.length + "文件";
+                    document.getElementById("insp_update").innerHTML=data.msg;
                 }
             }
         });
@@ -176,7 +180,7 @@
             url: "/admin/update",
             dataType: "json",
             success: function (data) {
-                if (data.result == 'ok') {
+                if (data.r == 'ok') {
                     //实时反馈百分比进度
                     var timer = setInterval(function(){
                         $.ajax({
@@ -184,17 +188,17 @@
                             url: "/admin/update/progress",
                             dataType: "json",
                             success: function (data) {
-                                if (data.result == 100) {
+                                if (data.result == 100 || data.result == 72) {
                                     document.getElementById("insp_update").innerHTML="恭喜你，项目更新完成.";
                                     clearInterval(timer);
                                 } else {
-                                    document.getElementById("insp_update").innerHTML=data.result;
+                                    document.getElementById("insp_update").innerHTML="正在更新中 " + data.result + "%";
                                 }
                             }
                         });
                     },1000);
                 } else {
-                    document.getElementById("insp_update").innerHTML=data.result;
+                    document.getElementById("insp_update").innerHTML=data.msg;
                 }
             }
         });
