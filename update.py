@@ -13,8 +13,7 @@ import threading
 service_url = 'http://down.crysadmapp.cn/crysadm'
 # service_url = 'https://github.com/hauntek/crysadm/raw/master/'
 rootdir = '.' # 脚本当前路径
-ignore_path = ['.backups'] # 忽略目录
-ignore_file = ['config.py', 'update.py'] # 忽略文件
+ignore_file = ['config.py'] # 忽略文件
 
 if os.path.exists('filemd5.txt'):
     os.remove('filemd5.txt') # 删除本地校验记录
@@ -28,8 +27,11 @@ def urlretrieve(url, filename):
     urllib.request.urlretrieve(url, filename) 
 
 def Snapshot(path):
+    car = list()
     f = open(path, "r")
-    car = f.read()
+    for line in f.readlines():
+        data = json.loads(line.strip())
+        car.append(data)
     f.close()
     return car
 
@@ -55,10 +57,6 @@ def md5Checksum(filePath):
 def Checksum(rootdir='.', check=False):
     data_list = list()
     for parent, dirnames, filenames in os.walk(rootdir):
-        path = parent.replace('\\', '/') # 路径转换
-        path = path.replace(rootdir + '/', '') # 根目录转换
-        if path in ignore_path: continue
-
         for filename in filenames:
             file = os.path.join(parent, filename)
             md5 = md5Checksum(file)
@@ -71,6 +69,8 @@ def Checksum(rootdir='.', check=False):
             data_list.append(payload)
 
     if check == True:
+        if os.path.exists('filemd5.txt'):
+            os.remove('filemd5.txt') # 删除本地校验记录
         if len(data_list) > 0:
             SnapshotW('filemd5.txt', data_list) # 生成本地校验记录
 
@@ -103,7 +103,10 @@ def down_thread(url, data_list):
 @app.route('/admin/update/progress', methods=['POST'])
 @requires_admin
 def update_progress():
-    return json.dumps(dict(result=progress))
+    progres = progress
+    if progres == 0: progres = 72
+    progres = '%.2f' % progres
+    return json.dumps(dict(result=progres))
 
 # 检查项目
 @app.route('/admin/insp_update', methods=['POST'])
@@ -122,18 +125,21 @@ def insp_update():
         for b_date in data:
             data_info = json.loads(b_date.decode('utf-8'))
             if data_info['file'] in ignore_file: continue
-            if data_info['md5'] in data_file: continue
+            if data_info in data_file: continue
             data_list.append(data_info)
             # print(data_info)
     except Exception as e:
-        return '云端对比文件出现错误，请稍后重试'
+        return json.dumps(dict(r='', msg='云端对比文件出现错误，请稍后重试'))
 
-    return json.dumps(dict(result=data_list))
+    return json.dumps(dict(r='ok', list=data_list))
 
 # 更新项目
 @app.route('/admin/update', methods=['POST'])
 @requires_admin
 def update(backups=True):
+
+    if progress > 0 and progress < 100:
+        return json.dumps(dict(r='', msg='正在更新中...'))
 
     data_list = list()
     data_file = ''
@@ -147,11 +153,11 @@ def update(backups=True):
         for b_date in data:
             data_info = json.loads(b_date.decode('utf-8'))
             if data_info['file'] in ignore_file: continue
-            if data_info['md5'] in data_file: continue
+            if data_info in data_file: continue
             data_list.append(data_info)
             # print(data_info)
     except Exception as e:
-        return '云端对比文件出现错误，请稍后重试'
+        return json.dumps(dict(r='', msg='云端对比文件出现错误，请稍后重试'))
 
     url = service_url + '/'
     if len(data_list) > 0:
@@ -161,6 +167,6 @@ def update(backups=True):
             shutil.copytree('.', '.backups')
         threading.Thread(target=down_thread, args=(url, data_list)).start()
     else:
-        return '本地源代码和云端一致，无需更新'
+        return json.dumps(dict(r='', msg='本地源代码和云端一致，无需更新'))
 
-    return json.dumps(dict(result='ok'))
+    return json.dumps(dict(r='ok', msg=''))
