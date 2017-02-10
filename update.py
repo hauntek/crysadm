@@ -19,6 +19,8 @@ ignore_file = ['config.py', 'update.py'] # 忽略文件
 if os.path.exists('filemd5.txt'):
     os.remove('filemd5.txt') # 删除本地校验记录
 
+progress = 0
+
 def urlopen(url):
     return urllib.request.urlopen(url).readlines()
 
@@ -75,6 +77,9 @@ def Checksum(rootdir='.', check=False):
     return data_list
 
 def down_thread(url, data_list):
+    global progress
+    progress = 0
+    number = 0
     try:
         for data in data_list:
             urls = url + data.get('file')
@@ -86,10 +91,18 @@ def down_thread(url, data_list):
             if not os.path.exists(dirpath):
                 os.makedirs(dirpath)
             urlretrieve(urls, filename)
+            number += 1
+            progress = number / len(data_list) * 100 # 百分比进度算法
     except Exception as e:
         pass
 
     print('下载完成')
+
+# 反馈百分比进度
+@app.route('/admin/update/progress', methods=['POST'])
+@requires_admin
+def update_progress():
+    return json.dumps(dict(result=progress))
 
 # 检查项目
 @app.route('/admin/insp_update', methods=['POST'])
@@ -149,4 +162,4 @@ def update(backups=True):
     else:
         return '本地源代码和云端一致，无需更新'
 
-    return '正在更新中，网络条件好的话，预计2分钟后更新完成，在此期间切勿断网'
+    return json.dumps(dict(result='ok'))
