@@ -140,7 +140,10 @@ def update(backups=True):
 
     if progress > 0 and progress < 100:
         return json.dumps(dict(r='', msg='正在更新中...'))
-
+    
+    if app.debug == True:
+        return json.dumps(dict(r='', msg='在线更新不建议在调试模式下进行，请修改config.py ProductionConfig类 DEBUG = False<br />ps:你也可以用命令方式更新 直接运行update_flash.py即可'))
+    
     data_list = list()
     data_file = ''
     Checksum(rootdir, True) # 是否校验，不校验话直接下载云端全部文件
