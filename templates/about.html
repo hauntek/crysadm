@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
+    {% if session.user_info.is_admin %}
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
@@ -9,16 +10,15 @@
                 </div>
                 <div class="ibox-content">
                     <div class="table-responsive">
-                    {% if session.user_info.is_admin %}
                         <p id="insp_update"></p>
                         <button type="button" style="margin-left: 3px;float:right;" class="btn btn-primary" onclick="update()">更新</button>
                         <button type="button" style="margin-left: 3px;float:right;" class="btn btn-white" onclick="insp_update()">检查</button>
-                    {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {% endif %}
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
