@@ -2,8 +2,17 @@ Crysadm+ 云端监控
 =============
 ![image](https://github.com/hauntek/crysadm/raw/master/static/img/preview.png)
 
-最新更新：2017-02-11
+最新更新：2017-02-12
 在线预览：http://www.crysadmapp.cn/guest
+
+更新日记：2017-02-12
+=============
+
+1.优化项目更新脚本
+
+2.优化项目下载性能
+
+3.优化文件校验逻辑
 
 更新日记：2017-02-11
 =============
