@@ -15,9 +15,6 @@ service_url = 'http://down.crysadmapp.cn/crysadm'
 rootdir = '.' # 脚本当前路径
 ignore_file = ['config.py'] # 忽略文件
 
-if os.path.exists('filemd5.txt'):
-    os.remove('filemd5.txt') # 删除本地校验记录
-
 progress = 0
 
 def urlopen(url):
@@ -26,19 +23,11 @@ def urlopen(url):
 def urlretrieve(url, filename):
     urllib.request.urlretrieve(url, filename) 
 
-def Snapshot(path):
-    car = list()
-    f = open(path, "r")
-    for line in f.readlines():
-        data = json.loads(line.strip())
-        car.append(data)
-    f.close()
-    return car
-
 def SnapshotW(path, cont):
     f = open(path, "a")
     for con in cont:
-        r = f.write(con + "\n") 
+        j_con = json.dumps(con)
+        r = f.write(j_con + "\n") 
     f.close()
     return r
 
@@ -62,10 +51,10 @@ def Checksum(rootdir='.', check=False):
             md5 = md5Checksum(file)
             file = file.replace('\\', '/') # 路径转换
             file = file.replace(rootdir + '/', '') # 根目录转换
-            payload = json.dumps({
-                "file": file,
-                "md5": md5,
-            })
+            payload = {
+                'file': file,
+                'md5': md5,
+            }
             data_list.append(payload)
 
     if check == True:
@@ -84,12 +73,11 @@ def down_thread(url, data_list):
         for data in data_list:
             urls = url + data.get('file')
             filename = data.get('file')
-            # print(filename)
             fname = filename.split('/')[-1]
-            dirpath = filename.replace(fname, '/' + fname)
-            dirpath = dirpath.split('//')[0]
-            if not os.path.exists(dirpath):
-                if fname != filename:
+            if fname != filename:
+                dirpath = filename.replace(fname, '/' + fname)
+                dirpath = dirpath.split('//')[0]
+                if not os.path.exists(dirpath):
                     os.makedirs(dirpath)
             urlretrieve(urls, filename)
             number += 1
@@ -114,11 +102,7 @@ def update_progress():
 def insp_update():
 
     data_list = list()
-    data_file = ''
-    Checksum(rootdir, True) # 是否校验，不校验话直接下载云端全部文件
-
-    if os.path.exists('filemd5.txt'):
-        data_file = Snapshot('filemd5.txt') # 取本地校验记录
+    data_file = Checksum(rootdir, False) # 是否生成本地校验记录
 
     try:
         data = urlopen(service_url + '/filemd5.txt')
@@ -140,16 +124,12 @@ def update(backups=True):
 
     if progress > 0 and progress < 100:
         return json.dumps(dict(r='', msg='正在更新中...'))
-    
+
     if app.debug == True:
         return json.dumps(dict(r='', msg='在线更新不建议在调试模式下进行，请修改config.py ProductionConfig类 DEBUG = False<br />ps:你也可以用命令方式更新 直接运行update_flash.py即可'))
-    
-    data_list = list()
-    data_file = ''
-    Checksum(rootdir, True) # 是否校验，不校验话直接下载云端全部文件
 
-    if os.path.exists('filemd5.txt'):
-        data_file = Snapshot('filemd5.txt') # 取本地校验记录
+    data_list = list()
+    data_file = Checksum(rootdir, True) # 是否生成本地校验记录
 
     try:
         data = urlopen(service_url + '/filemd5.txt')
