@@ -41,14 +41,6 @@ def requires_auth(f):
         user_key = '%s:%s' % ('user', user.get('username'))
         if r_session.get(user_key) is None:
             session.clear()
-            session['error_message'] = '用户不存在'
-            return redirect(url_for('login'))
-
-        user_info = json.loads(r_session.get(user_key).decode('utf-8'))
-
-        if user_info.get('active') is None or not user_info.get('active'):
-            session.clear()
-            session['error_message'] = '您的账号已被禁用.'
             return redirect(url_for('login'))
         __handshake()
         return f(*args, **kwargs)
