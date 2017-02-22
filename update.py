@@ -12,7 +12,7 @@ import threading
 
 service_url = 'http://down.crysadmapp.cn/crysadm'
 # service_url = 'https://github.com/hauntek/crysadm/raw/master/'
-rootdir = '.' # 脚本当前路径
+rootdir = './' # 脚本当前路径
 ignore_file = ['config.py'] # 忽略文件
 
 progress = 0
@@ -43,14 +43,19 @@ def md5Checksum(filePath):
     return m.hexdigest()
 
 # 检查目录及子目录文件，生成md5校验
-def Checksum(rootdir='.', check=False):
+def Checksum(rootdir='./', check=False):
     data_list = list()
     for parent, dirnames, filenames in os.walk(rootdir):
         for filename in filenames:
             file = os.path.join(parent, filename)
-            md5 = md5Checksum(file)
             file = file.replace('\\', '/') # 路径转换
-            file = file.replace(rootdir + '/', '') # 根目录转换
+            file = file.replace(rootdir, '') # 根目录转换
+
+            try:
+                md5 = md5Checksum(file)
+            except Exception as e:
+                continue
+
             payload = {
                 'file': file,
                 'md5': md5,
