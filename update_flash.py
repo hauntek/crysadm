@@ -109,9 +109,9 @@ def update(backups=True):
 
     if len(data_list) > 0:
         if backups:
-            if os.path.exists('.backups'):
-                shutil.rmtree('.backups')
-            shutil.copytree('.', '.backups')
+            if os.path.exists('__backups__'):
+                shutil.rmtree('__backups__')
+            shutil.copytree('.', '__backups__')
         threading.Thread(target=down_thread, args=(service_url, data_list)).start()
     else:
         return '本地源代码和云端一致，无需更新'
