@@ -16,7 +16,7 @@ else:
 
 app.config.from_object(config.ProductionConfig)
 app.secret_key = str(uuid.uuid1())
-app.permanent_session_lifetime = timedelta(minutes=60)
+app.permanent_session_lifetime = timedelta(minutes=120)
 redis_conf = app.config.get('REDIS_CONF')
 pool = redis.ConnectionPool(host=redis_conf.host, port=redis_conf.port, db=redis_conf.db, password=redis_conf.password)
 r_session = redis.Redis(connection_pool=pool)
