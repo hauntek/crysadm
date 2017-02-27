@@ -2,8 +2,20 @@ Crysadm+ 云端监控
 =============
 ![image](https://github.com/hauntek/crysadm/raw/master/static/img/preview.png)
 
-最新更新：2017-02-22
+最新更新：2017-02-28
 在线预览：http://www.crysadmapp.cn/guest
+
+更新日记：2017-02-28
+=============
+
+1.添加终端程序，无限制平台
+
+2.增加 控制终端页面
+- 页面及按钮权限仅管理员可见，实时反馈结果
+
+3.取消禁用权限检查
+
+4.调整session过期时间
 
 更新日记：2017-02-22
 =============
