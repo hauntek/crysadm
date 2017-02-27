@@ -143,66 +143,66 @@
 {% block js_logic %}
     {% if session.user_info.is_admin %}
     <script>
-    (function () {
-        insp_update();
-    })();
+        (function () {
+            insp_update();
+        })();
 
-
-    //检查
-    function insp_update() {
-        document.getElementById("insp_update").innerHTML = '';
-        $.ajax({
-            type: "POST",
-            url: "/admin/insp_update",
-            dataType: "json",
-            success: function (data) {
-                if (data.r == 'ok') {
-                    if (data.list.length == 0) {
-                        document.getElementById("insp_update").innerHTML="本地源代码和云端一致，无需更新";
-                    } else {
-                        for (var i = 0;i < data.list.length; i++) {
-                            var file = '发现更新的文件：' + data.list[i].file + "<br/>";
-                            document.getElementById("insp_update").innerHTML+=file;
-                        }
-                        document.getElementById("insp_update").innerHTML+="<br/>" + "总共：" + data.list.length + "文件";
-                    }
-                } else {
-                    document.getElementById("insp_update").innerHTML=data.msg;
-                }
-            }
-        });
-    };
-    //更新
-    function update() {
-        document.getElementById("insp_update").innerHTML = '';
-        $.ajax({
-            type: "POST",
-            url: "/admin/update",
-            dataType: "json",
-            success: function (data) {
-                if (data.r == 'ok') {
-                    //实时反馈百分比进度
-                    var timer = setInterval(function(){
-                        $.ajax({
-                            type: "POST",
-                            url: "/admin/update/progress",
-                            dataType: "json",
-                            success: function (data) {
-                                if (data.result == 100 || data.result == 72) {
-                                    document.getElementById("insp_update").innerHTML="恭喜你，项目更新完成.";
-                                    clearInterval(timer);
-                                } else {
-                                    document.getElementById("insp_update").innerHTML="正在更新中 " + data.result + "%";
-                                }
+        //检查
+        function insp_update() {
+            document.getElementById("insp_update").innerHTML = '';
+            $.ajax({
+                type: "POST",
+                url: "/admin/insp_update",
+                dataType: "json",
+                success: function (data) {
+                    if (data.r == 'ok') {
+                        if (data.list.length == 0) {
+                            document.getElementById("insp_update").innerHTML="本地源代码和云端一致，无需更新";
+                        } else {
+                            for (var i = 0;i < data.list.length; i++) {
+                                var file = '发现更新的文件：' + data.list[i].file + "<br/>";
+                                document.getElementById("insp_update").innerHTML+=file;
                             }
-                        });
-                    },1000);
-                } else {
-                    document.getElementById("insp_update").innerHTML=data.msg;
+                            document.getElementById("insp_update").innerHTML+="<br/>" + "总共：" + data.list.length + "文件";
+                        }
+                    } else {
+                        document.getElementById("insp_update").innerHTML=data.msg;
+                    }
                 }
-            }
-        });
-    };
+            });
+        };
+
+        //更新
+        function update() {
+            document.getElementById("insp_update").innerHTML = '';
+            $.ajax({
+                type: "POST",
+                url: "/admin/update",
+                dataType: "json",
+                success: function (data) {
+                    if (data.r == 'ok') {
+                        //实时反馈百分比进度
+                        var timer = setInterval(function(){
+                            $.ajax({
+                                type: "POST",
+                                url: "/admin/update/progress",
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data.result == 100 || data.result == 72) {
+                                        document.getElementById("insp_update").innerHTML="恭喜你，项目更新完成.";
+                                        clearInterval(timer);
+                                    } else {
+                                        document.getElementById("insp_update").innerHTML="正在更新中 " + data.result + "%";
+                                    }
+                                }
+                            });
+                        },1000);
+                    } else {
+                        document.getElementById("insp_update").innerHTML=data.msg;
+                    }
+                }
+            });
+        };
     </script>
     {% endif %}
 {% endblock %}
