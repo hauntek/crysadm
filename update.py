@@ -2,6 +2,7 @@ __author__ = 'azjcode'
 from flask import request, Response, session, render_template, url_for, redirect
 from crysadm import app, r_session
 from auth import requires_admin, requires_auth
+import sys
 import os
 import os.path
 import json
@@ -69,6 +70,10 @@ def Checksum(rootdir='.', check=False):
 
     return data_list
 
+def restart_flask():
+    python = sys.executable
+    os.execl(python, 'python', *sys.argv)
+
 def down_thread(url, data_list):
     global progress
     progress = 0
@@ -89,11 +94,10 @@ def down_thread(url, data_list):
     except Exception as e:
         pass
 
-    print('下载完成')
+    restart_flask()
 
 # 反馈百分比进度
 @app.route('/admin/update/progress', methods=['POST'])
-@requires_admin
 def update_progress():
     progres = progress
     if progres == 0: progres = 72
