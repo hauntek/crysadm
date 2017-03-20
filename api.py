@@ -203,7 +203,7 @@ def ubus_cd(session_id, account_id, action, out_params, url_param=None):
         s.mount('http://', HTTPAdapter(max_retries=5))
         proxies = api_proxies()
         r = s.post(url, data=body, proxies=proxies)
-        result = r.text[r.text.index('{'):r.text.rindex('}')+1]
+        result = r.text[r.text.index('{'):r.text.rindex('}') + 1]
         return json.loads(result)
 
     except requests.exceptions.RequestException as e:
