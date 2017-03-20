@@ -9,7 +9,7 @@ from urllib.parse import urlparse, parse_qs
 requests.packages.urllib3.disable_warnings()
 
 # 迅雷API接口
-appversion = '3.1.1'
+appversion = '3.1.7'
 server_address = 'http://1-api-red.xunlei.com'
 agent_header = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11"}
 
@@ -76,12 +76,6 @@ def draw_cash(cookies, money):
     body = dict(v='3', m=str(money))
     return api_post(url='?r=usr/drawpkg', data=body, cookies=cookies)
 
-# 获取输入的COOKIES信息
-def get_income_info(cookies):
-    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(hand='0', v='1', ver='1')
-    return api_post(url='/?r=usr/getinfo&v=1', data=body, cookies=cookies)
-
 # 获取MINE信息
 def get_mine_info(cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
@@ -94,33 +88,16 @@ def get_produce_stat(cookies):
     body = dict(appversion=appversion)
     return api_post(url="/?r=mine/produce_stat", data=body, cookies=cookies)
 
-# 获取速度状态
-def get_speed_stat(cookies):
-    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(type='1', hand='0', v='0', ver='1')
-    try:
-        proxies = api_proxies()
-        r = requests.post(server_address + '/?r=mine/speed_stat', data=body, proxies=proxies, verify=False, cookies=cookies, headers=agent_header, timeout=60)
-    except requests.exceptions.RequestException as e:
-        __handle_exception(e=e)
-        return [0] * 24
-
-    if r.status_code != 200:
-        __handle_exception(rd=r.reason)
-        return [0] * 24
-
-    return json.loads(r.text).get('sds')
-
 # 获取个人信息
 def get_privilege(cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(v='1', ver=appversion)
+    body = dict(v='1', appversion=appversion, ver=appversion)
     return api_post(url='/?r=usr/privilege', data=body, cookies=cookies)
 
 # 获取设备状态
 def get_device_stat(s_type, cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(type=s_type, hand='0', v='2', ver='1')
+    body = dict(v='3', appversion=appversion, type=s_type)
     return api_post(url='/?r=mine/devices_stat', data=body, cookies=cookies)
 
 # 提交收集水晶请求
@@ -129,7 +106,7 @@ def collect(cookies):
     body = dict(hand='0', v='2', ver='1')
     return api_post(url='/index.php?r=mine/collect', data=body, cookies=cookies)
 
-# 获取宝箱信息
+# 获取免费宝箱信息
 def api_giftbox(cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
     body = dict(tp='0', p='0', ps='60', t='', v='2', cmid='-1')
@@ -145,6 +122,36 @@ def api_openStone(cookies, giftbox_id, direction):
 def api_giveUpGift(cookies, giftbox_id):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
     body = dict(v='2', id=str(giftbox_id), tag='0')
+    return api_post(url='/?r=usr/giveUpGift', data=body, cookies=cookies)
+
+# 获取免费宝箱次数
+def api_shakeLeft(cookies):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict()
+    return api_post(url='/?r=usr/shakeLeft', data=body, cookies=cookies)
+
+# 提交摇晃宝箱请求
+def api_shakeGift(cookies):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(v='1')
+    return api_post(url='/?r=usr/shakeGift', data=body, cookies=cookies)
+
+# 获取摇晃宝箱信息
+def api_stoneInfo(cookies, giftbox_id, tag):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(v='1', id=giftbox_id, tag=tag)
+    return api_post(url='/?r=usr/stoneInfo', data=body, cookies=cookies)
+
+# 提交打开宝箱请求
+def api_openStone2(cookies, giftbox_id, direction, tag):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(v='1', id=str(giftbox_id), side=direction, tag=tag)
+    return api_post(url='/?r=usr/openStone', data=body, cookies=cookies)
+
+# 提交放弃宝箱请求
+def api_giveUpGift2(cookies, giftbox_id, tag):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(v='2', id=str(giftbox_id), tag=tag)
     return api_post(url='/?r=usr/giveUpGift', data=body, cookies=cookies)
 
 # 获取幸运转盘信息
