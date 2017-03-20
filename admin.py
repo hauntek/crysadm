@@ -137,6 +137,8 @@ def admin_change_property(field, value, username):
         user_info['auto_drawcash'] = True if value == '1' else False
     elif field == 'auto_giftbox':
         user_info['auto_giftbox'] = True if value == '1' else False
+    elif field == 'auto_shakegift':
+        user_info['auto_shakegift'] = True if value == '1' else False
     elif field == 'auto_searcht':
         user_info['auto_searcht'] = True if value == '1' else False
     elif field == 'auto_revenge':
