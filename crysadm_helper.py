@@ -161,7 +161,7 @@ def save_history(username):
                 data.get('zqb_speed_stat')[23] = last_speed * 8
         else:
             if data.get('zqb_speed_stat')[23] != 0:
-                last_speed = (last_speed + data.get('zqb_speed_stat')[23] / 8) / 2 # 计算平均值
+                last_speed = int((last_speed + data.get('zqb_speed_stat')[23] / 8) / 2) # 计算平均值
             del data['zqb_speed_stat'][0]
             data['zqb_speed_stat'].append(last_speed * 8)
 
