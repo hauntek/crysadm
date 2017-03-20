@@ -44,7 +44,7 @@ def excavators():
     return render_template('excavators.html', err_msg=err_msg, info_msg=info_msg, accounts=accounts,
                            show_drawcash=show_drawcash)
 
-# 正则过滤+URL转码
+# 正则过滤 + URL转码
 def regular_html(info):
     regular = re.compile('<[^>]+>')
     url = unquote(info)
