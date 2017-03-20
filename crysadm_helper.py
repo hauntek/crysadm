@@ -341,13 +341,13 @@ def check_giftbox(user, cookies):
     if box_info.get('r') != 0: return
     for box in box_info.get('ci'):
         if box.get('cnum') == 0:
-            r = api_openStone(cookies=cookies, giftbox_id=box.get('id'), direction='3')
+            r = api_openStone(cookies, box.get('id'), '3')
             if r.get('r') != 0:
                 log = r.get('rd')
             else:
                 log = '开启:获得:%s水晶.' % r.get('get').get('num')
         else:
-            r = api_giveUpGift(cookies=cookies, giftbox_id=box.get('id'))
+            r = api_giveUpGift(cookies, box.get('id'))
             if r.get('r') != 0:
                 log = r.get('rd')
             else:
@@ -399,13 +399,13 @@ def check_searcht(user, cookies):
         if steal_info.get('r') != 0:
             log = regular_html(r.get('rd'))
         else:
-            t = api_steal_collect(cookies=cookies, searcht_id=steal_info.get('sid'))
+            t = api_steal_collect(cookies, steal_info.get('sid'))
             if t.get('r') != 0:
                 log = 'Forbidden'
             else:
                 log = '获得:%s秘银.' % t.get('s')
                 time.sleep(1)
-                api_steal_summary(cookies=cookies, searcht_id=steal_info.get('sid'))
+                api_steal_summary(cookies, steal_info.get('sid'))
         loging(user, '自动执行', '进攻', log)
     time.sleep(3)
 
