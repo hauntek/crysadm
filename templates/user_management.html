@@ -119,6 +119,20 @@
                             </div>
                         </form>
 
+                        <form role="form" action="/admin/change_property/auto_shakegift/{% if user.auto_shakegift %}0{% else %}1{% endif %}/{{ user.username|e }}" method="post">
+                            <div class="form-group input-group">
+                                <span class="input-group-addon"><i style="width: 16px;" class="fa fa-rmb"></i></span>
+                                <input type="text" class="form-control" value="{% if user.auto_shakegift %}O{% else %}X{% endif %}" disabled />
+                                <span class="input-group-btn" style="padding-top: 0px;padding-bottom: 0px;">
+                                {% if user.auto_shakegift %}
+                                    <button type="submit" class="btn btn-danger" style="text-align:left; width: 117px;">取消摇晃宝箱</button>
+                                {% else %}
+                                    <button type="submit" class="btn btn-success" style="text-align:left; width: 117px;">摇晃宝箱</button>
+                                {% endif %}
+                                </span>
+                            </div>
+                        </form>
+
                         <form role="form" action="/admin/change_property/auto_searcht/{% if user.auto_searcht %}0{% else %}1{% endif %}/{{ user.username|e }}" method="post">
                             <div class="form-group input-group">
                                 <span class="input-group-addon"><i style="width: 16px;" class="fa fa-rmb"></i></span>
