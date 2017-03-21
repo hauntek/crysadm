@@ -92,7 +92,7 @@ def down_thread(url, data_list):
             number += 1
             progress = number / len(data_list) * 100 # 百分比进度算法
     except Exception as e:
-        pass
+        return
 
     restart_flask()
 
