@@ -14,6 +14,9 @@ service_url = 'http://down.crysadmapp.cn/crysadm/'
 rootdir = '.' # 脚本当前路径
 ignore_file = [] # 忽略文件
 
+if os.path.exists('config.py'):
+    ignore_file.append('config.py')
+
 def urlopen(url):
     return urllib.request.urlopen(url).readlines()
 
@@ -87,7 +90,7 @@ def down_thread(url, data_list):
             sys.stdout.write(tmp_str + "\r")
             sys.stdout.flush()
     except Exception as e:
-        pass
+        return
 
     print('下载完成')
 
