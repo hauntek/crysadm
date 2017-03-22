@@ -15,12 +15,77 @@
 <textarea id="code">
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-import sys
-if True :
-    for i in range(1, 4):
-        print(i)
-    print('Hello World!')
-    print(sys.version)
+# 查询站点用户详情脚本
+import redis
+import json
+import time
+redis_host = '127.0.0.1' # redis地址
+redis_port = 6379 # redis端口
+redis_db = 0
+redis_password = None # redis密码
+pool = redis.ConnectionPool(host=redis_host, port=redis_port, db=redis_db, password=redis_password)
+r_session = redis.Redis(connection_pool=pool)
+account_ss = list()
+account_st = list()
+account_ds = list()
+account_dt = list()
+account_uu = list()
+account_tt = list()
+device_ss = list()
+device_st = list()
+device_uu = list()
+device_tt = list()
+start = time.clock()
+for b_user in r_session.mget(*['user:%s' % name.decode('utf-8') for name in sorted(r_session.smembers('users'))]):
+    if b_user is None:
+        continue
+    user = json.loads(b_user.decode('utf-8'))
+    accounts_key = 'accounts:%s' % user.get('username')
+    if r_session.scard(accounts_key) > 0:
+        account_ds.append(user)
+    else:
+        account_dt.append(user)
+
+    account_uu.append(user)
+
+    for acct in sorted(r_session.smembers(accounts_key)):
+        account_key = 'account:%s:%s' % (user.get('username'), acct.decode("utf-8"))
+        account_data_key = account_key + ':data'
+        account_data_value = r_session.get(account_data_key)
+        account_info = json.loads(r_session.get(account_key).decode("utf-8"))
+        if account_info.get('active') == True:
+            account_ss.append(account_info)
+            if account_data_value is not None:
+                devices = json.loads(account_data_value.decode("utf-8"))
+                device_info = devices.get('device_info')
+                for dev in device_info:
+                    if len(dev.get('dcdn_clients')) > 0:
+                        device_ss.append(dev)
+                    else:
+                        device_st.append(dev)
+
+                device_uu += device_info
+        else:
+            account_st.append(account_info)
+            if account_data_value is not None:
+                devices = json.loads(account_data_value.decode("utf-8"))
+                device_info = devices.get('device_info')
+                device_tt += device_info
+
+        account_tt.append(account_info)
+end = time.clock()
+print('当前有迅雷账号用户数量（活用户）: %d' % len(account_ds))
+print('当前空迅雷账号用户数量（死用户）: %d' % len(account_dt))
+print('当前用户数量（总计）: %d' % len(account_uu))
+print('当前已启用迅雷账号（添加了迅雷账号，已经启用的账号）: %d' % len(account_ss))
+print('当前已停止迅雷账号（添加了迅雷账号，但没启用的账号）: %d' % len(account_st))
+print('当前已添加迅雷账号（总计）: %d' % len(account_tt))
+print('当前在监控中正常迅雷矿机（例如:正常，无异常等）: %d' % len(device_ss))
+print('当前在监控中不正常迅雷矿机（例如:停止，异常等）: %d' % len(device_st))
+print('当前在监控迅雷矿机（总计）: %d' % len(device_uu))
+print('当前不在监控迅雷矿机（总计）: %d' % len(device_tt))
+print('合计：本站用户: %d，本站迅雷账号: %d，本站迅雷矿机:%d' %(len(account_uu), len(account_tt), len(device_uu) + len(device_tt)))
+print('执行耗时: %f s' % (end - start))
 </textarea>
                     <button type="button" style="margin-top:15px;" class="btn btn-white" onclick="console_run()" data-toggle="modal" data-target="#myModal"><i class="fa fa-play"></i> 执行</button>
                     <div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
