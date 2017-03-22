@@ -11,10 +11,10 @@ import threading
 # PS:本脚本直接运行，即可下载全部文件（会覆盖全部，运行前建议备份原文件）
 
 service_url = 'http://down.crysadmapp.cn/crysadm/'
-rootdir = '.' # 脚本当前路径
+rootdir = os.path.dirname(os.path.abspath(sys.argv[0])) # 脚本当前路径
 ignore_file = [] # 忽略文件
 
-if os.path.exists('config.py'):
+if os.path.exists(os.path.join(rootdir, 'config.py')):
     ignore_file.append('config.py')
 
 def urlopen(url):
@@ -47,17 +47,18 @@ def Checksum(rootdir='.', check=False):
     data_list = list()
     for parent, dirnames, filenames in os.walk(rootdir):
         for filename in filenames:
-            file = os.path.join(parent, filename)
-            file = file.replace('\\', '/') # 路径转换
-            file = file.replace(rootdir + '/', '') # 根目录转换
+            filepath = os.path.join(parent, filename)
 
             try:
-                md5 = md5Checksum(file)
+                md5 = md5Checksum(filepath)
             except Exception as e:
                 continue
 
+            filepath = filepath.replace(os.path.join(rootdir, ''), '') # 根目录转换
+            filepath = filepath.replace('\\', '/') # 路径转换
+
             payload = {
-                'file': file,
+                'file': filepath,
                 'md5': md5,
             }
             data_list.append(payload)
@@ -76,14 +77,12 @@ def down_thread(url, data_list):
     try:
         for data in data_list:
             urls = url + data.get('file')
-            filename = data.get('file')
-            fname = filename.split('/')[-1]
-            if fname != filename:
-                dirpath = filename.replace(fname, '/' + fname)
-                dirpath = dirpath.split('//')[0]
-                if not os.path.exists(dirpath):
-                    os.makedirs(dirpath)
-            urlretrieve(urls, filename)
+            files = os.path.join(rootdir, os.path.normpath(data.get('file')))
+
+            dirpath = os.path.dirname(files)
+            if not os.path.exists(dirpath):
+                os.makedirs(dirpath)
+            urlretrieve(urls, files)
             number += 1
             progress = number / len(data_list) * 100 # 百分比进度算法
             tmp_str = '正在下载 %s/%s 文件 - %.2f' % (number, len(data_list), progress) + "%"
@@ -112,9 +111,9 @@ def update(backups=True):
 
     if len(data_list) > 0:
         if backups:
-            if os.path.exists('__backups__'):
-                shutil.rmtree('__backups__')
-            shutil.copytree('.', '__backups__')
+            if os.path.exists('crysadm.backups'):
+                shutil.rmtree('crysadm.backups')
+            shutil.copytree(rootdir, 'crysadm.backups')
         threading.Thread(target=down_thread, args=(service_url, data_list)).start()
     else:
         return '本地源代码和云端一致，无需更新'
