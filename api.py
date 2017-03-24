@@ -22,11 +22,11 @@ def api_post(cookies, url, data, verify=False, headers=agent_header, timeout=60)
     address = server_address + url
     try:
         proxies = api_proxies()
-        r = requests.post(url=address, data=data, proxies=proxies, verify=verify, headers=headers, cookies=cookies, timeout=timeout)        
+        r = requests.post(url=address, data=data, proxies=proxies, verify=verify, headers=headers, cookies=cookies, timeout=timeout)
     except requests.exceptions.RequestException as e:
         return __handle_exception(e=e)
 
-    if r.status_code != 200: 
+    if r.status_code != 200:
         return __handle_exception(rd=r.reason)
 
     return json.loads(r.text)
