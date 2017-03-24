@@ -373,15 +373,14 @@ def check_shakegift(cookies):
     boxleft = api_shakeLeft(cookies)
     time.sleep(2)
     if boxleft.get('r') != 0: return
-    if int(boxleft.get('left')) == 0: return
-    for i in range(int(boxleft.get('left'))):
+    if boxleft.get('left') > 0:
         box_info = api_shakeGift(cookies)
         time.sleep(2)
-        if box_info.get('r') != 0: continue
+        if box_info.get('r') != 0: return
         tag = '2' if box_info.get('type') == 1 else '1'
         box = api_stoneInfo(cookies, box_info.get('id'), tag)
         time.sleep(2)
-        if box.get('r') != 0: continue
+        if box.get('r') != 0: return
         if box.get('cost') == 0:
             r = api_openStone2(cookies, box_info.get('id'), 3, tag)
             if r.get('r') != 0:
@@ -395,7 +394,7 @@ def check_shakegift(cookies):
             else:
                 log = '丢弃:收费:%s水晶.' % box.get('cost')
         loging(user_info, '自动执行', '宝箱', cookies.get('userid'), log)
-        time.sleep(3)
+    time.sleep(3)
 
 # 执行秘银进攻函数
 def check_searcht(cookies):
