@@ -386,13 +386,13 @@ def check_shakegift(cookies):
         time.sleep(2)
         if box.get('r') != 0: return
         if box.get('cost') == 0:
-            r = api_openStone2(cookies, box_info.get('id'), 3, tag)
+            r = api_openStone(cookies, box_info.get('id'), 3, tag)
             if r.get('r') != 0:
                 log = r.get('rd')
             else:
                 log = '开启:获得:%s水晶.' % r.get('get').get('num')
         else:
-            r = api_giveUpGift2(cookies, box_info.get('id'), tag)
+            r = api_giveUpGift(cookies, box_info.get('id'), tag)
             if r.get('r') != 0:
                 log = r.get('rd')
             else:
