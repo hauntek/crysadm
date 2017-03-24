@@ -430,15 +430,19 @@ def check_getaward(cookies):
     user_info = cookies.get('user_info')
     del cookies['user_info']
 
-    r = api_getconfig(cookies)
+    mine_info = get_mine_info(cookies)
     time.sleep(2)
-    if r.get('rd') != 'ok': return
-    if r.get('cost') == 5000:
-        t = api_getaward(cookies)
-        if t.get('rd') != 'ok':
-            log = t.get('rd')
+    if mine_info.get('r') != 0: return
+    if mine_info.get('s') > 5000:
+        r = api_getconfig(cookies)
+        time.sleep(2)
+        if r.get('rd') != 'ok': return
+        if r.get('cost') > 5000: return
+        r = api_getaward(cookies)
+        if r.get('rd') != 'ok':
+            log = r.get('rd')
         else:
-            log = '获得:%s' % regular_html(t.get('tip'))
+            log = '获得:%s' % regular_html(r.get('tip'))
         loging(user_info, '自动执行', '转盘', cookies.get('userid'), log)
     time.sleep(3)
 
