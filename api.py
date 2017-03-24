@@ -112,19 +112,7 @@ def api_giftbox(cookies):
     body = dict(tp='0', p='0', ps='60', t='', v='2', cmid='-1')
     return api_post(url='/?r=usr/giftbox', data=body, cookies=cookies)
 
-# 提交打开宝箱请求
-def api_openStone(cookies, giftbox_id, direction):
-    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(v='1', id=str(giftbox_id), side=direction)
-    return api_post(url='/?r=usr/openStone', data=body, cookies=cookies)
-
-# 提交放弃宝箱请求
-def api_giveUpGift(cookies, giftbox_id):
-    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(v='2', id=str(giftbox_id), tag='0')
-    return api_post(url='/?r=usr/giveUpGift', data=body, cookies=cookies)
-
-# 获取免费宝箱次数
+# 获取摇晃宝箱次数
 def api_shakeLeft(cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
     body = dict()
@@ -143,15 +131,17 @@ def api_stoneInfo(cookies, giftbox_id, tag):
     return api_post(url='/?r=usr/stoneInfo', data=body, cookies=cookies)
 
 # 提交打开宝箱请求
-def api_openStone2(cookies, giftbox_id, direction, tag):
+def api_openStone(cookies, sid, side, tag=None):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(v='1', id=str(giftbox_id), side=direction, tag=tag)
+    body = dict(v='1', id=str(sid), side=side)
+    if tag is not None: body['tag'] = tag
     return api_post(url='/?r=usr/openStone', data=body, cookies=cookies)
 
 # 提交放弃宝箱请求
-def api_giveUpGift2(cookies, giftbox_id, tag):
+def api_giveUpGift(cookies, sid, tag='0'):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(v='2', id=str(giftbox_id), tag=tag)
+    body = dict(v='2', id=str(sid), tag=tag)
+    if tag != '0': body['tag'] = tag
     return api_post(url='/?r=usr/giveUpGift', data=body, cookies=cookies)
 
 # 获取秘银进攻信息
