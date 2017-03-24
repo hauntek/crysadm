@@ -361,7 +361,8 @@ def check_giftbox(cookies):
             else:
                 log = '丢弃:收费:%s水晶.' % box.get('cnum')
         loging(user_info, '自动执行', '宝箱', cookies.get('userid'), log)
-        time.sleep(3)
+        break
+    time.sleep(3)
 
 # 执行摇晃宝箱函数
 def check_shakegift(cookies):
