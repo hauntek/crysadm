@@ -2,8 +2,15 @@ Crysadm+ 云端监控
 =============
 ![image](https://github.com/hauntek/crysadm/raw/master/static/img/preview.png)
 
-最新更新：2017-03-23
+最新更新：2017-03-24
 在线预览：http://www.crysadmapp.cn/guest
+
+更新日记：2017-03-23
+=============
+
+1.优化后端自动日记记录重组函数
+
+2.优化后端多进程等待上个进程，降低不必要的负载
 
 更新日记：2017-03-23
 =============
