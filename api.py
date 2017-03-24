@@ -154,6 +154,37 @@ def api_giveUpGift2(cookies, giftbox_id, tag):
     body = dict(v='2', id=str(giftbox_id), tag=tag)
     return api_post(url='/?r=usr/giveUpGift', data=body, cookies=cookies)
 
+# 获取秘银进攻信息
+def api_sys_getEntry(cookies):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(v='6')
+    return api_post(url='/?r=sys/getEntry', data=body, cookies=cookies)
+
+# 获取秘银复仇信息
+def api_steal_stolenSilverHistory(cookies):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(v='2', p='0', ps='20')
+    return api_post(url='/?r=steal/stolenSilverHistory', data=body, cookies=cookies)
+
+# 提交秘银进攻请求
+def api_steal_search(cookies, sid=None):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(v='2')
+    if sid is not None: body['sid'] = str(sid)
+    return api_post(url='/?r=steal/search', data=body, cookies=cookies)
+
+# 提交收集秘银请求
+def api_steal_collect(cookies, sid):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(sid=str(sid), cmid='-2', v='2')
+    return api_post(url='/?r=steal/collect', data=body, cookies=cookies)
+
+# 提交进攻结果请求
+def api_steal_summary(cookies, sid):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(sid=str(sid), v='2')
+    return api_post(url='/?r=steal/summary', data=body, cookies=cookies)
+
 # 获取幸运转盘信息
 def api_getconfig(cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
@@ -163,30 +194,6 @@ def api_getconfig(cookies):
 def api_getaward(cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
     return api_post(url='/?r=turntable/getaward', data=None, cookies=cookies)
-
-# 获取秘银进攻信息
-def api_sys_getEntry(cookies):
-    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(v='6')
-    return api_post(url='/?r=sys/getEntry', data=body, cookies=cookies)
-
-# 提交秘银进攻请求
-def api_steal_search(cookies):
-    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(v='2')
-    return api_post(url='/?r=steal/search', data=body, cookies=cookies)
-
-# 提交收集秘银请求
-def api_steal_collect(cookies, searcht_id):
-    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(sid=str(searcht_id), cmid='-2', v='2')
-    return api_post(url='/?r=steal/collect', data=body, cookies=cookies)
-
-# 提交进攻结果请求
-def api_steal_summary(cookies, searcht_id):
-    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
-    body = dict(sid=str(searcht_id), v='2')
-    return api_post(url='/?r=steal/summary', data=body, cookies=cookies)
 
 # 获取星域存储相关信息
 def ubus_cd(session_id, account_id, action, out_params, url_param=None):
