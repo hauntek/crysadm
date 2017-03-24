@@ -310,7 +310,7 @@ def check_collect(cookies):
     if mine_info.get('td_not_in_a') > 16000:
         r = collect(cookies)
         if r.get('rd') != 'ok':
-            log = '%s' % r.get('rd')
+            log = r.get('rd')
         else:
             log = '收取:%s水晶.' % mine_info.get('td_not_in_a')
         loging(user_info, '自动执行', '收取', cookies.get('userid'), log)
