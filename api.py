@@ -185,6 +185,25 @@ def api_getaward(cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
     return api_post(url='/?r=turntable/getaward', data=None, cookies=cookies)
 
+# 获取秘银进攻信息，迅雷游乐场
+def api_pcSteal_info(cookies):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(appversion=appversion)
+    return api_post(url='/?r=pcSteal/info', data=body, cookies=cookies)
+
+# 获取秘银复仇信息，迅雷游乐场
+def api_pcSteal_stolenHistory(cookies):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(appversion=appversion)
+    return api_post(url='/?r=pcSteal/stolenHistory', data=body, cookies=cookies)
+
+# 提交秘银进攻请求，迅雷游乐场
+def api_pcSteal_steal(cookies, sid=None):
+    cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
+    body = dict(appversion=appversion)
+    if sid is not None: body['sid'] = str(sid)
+    return api_post(url='/?r=pcSteal/steal', data=body, cookies=cookies)
+
 # 获取星域存储相关信息
 def ubus_cd(session_id, account_id, action, out_params, url_param=None):
     url = "http://kjapi.peiluyou.com:5171/ubus_cd?account_id=%s&session_id=%s&action=%s" % (account_id, session_id, action)
