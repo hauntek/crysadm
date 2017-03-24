@@ -417,11 +417,11 @@ def check_searcht(cookies):
             log = regular_html(steal_info.get('rd'))
         else:
             t = api_steal_collect(cookies, steal_info.get('sid'))
+            time.sleep(2)
             if t.get('r') != 0:
                 log = 'Forbidden'
             else:
                 log = '获得:%s秘银.' % t.get('s')
-                time.sleep(2)
                 api_steal_summary(cookies, steal_info.get('sid'))
         loging(user_info, '自动执行', '进攻', cookies.get('userid'), log)
     time.sleep(3)
@@ -444,11 +444,11 @@ def check_revenge(cookies):
             log = regular_html(steal_info.get('rd'))
         else:
             t = api_steal_collect(cookies, steal_info.get('sid'))
+            time.sleep(2)
             if t.get('r') != 0:
                 log = 'Forbidden'
             else:
                 log = '获得:%s秘银.' % t.get('s')
-                time.sleep(2)
                 api_steal_summary(cookies, steal_info.get('sid'))
         loging(user_info, '自动执行', '复仇', cookies.get('userid'), log)
         break
