@@ -265,6 +265,7 @@ def select_auto_task_user():
     r_session.delete('global:auto.giftbox.cookies')
     r_session.delete('global:auto.shakegift.cookies')
     r_session.delete('global:auto.searcht.cookies')
+    r_session.delete('global:auto.revenge.cookies')
     r_session.delete('global:auto.getaward.cookies')
 
     if not r_session.smembers('users'): return
@@ -294,6 +295,8 @@ def select_auto_task_user():
                 r_session.sadd('global:auto.shakegift.cookies', cookies)
             if user_info.get('auto_searcht'):
                 r_session.sadd('global:auto.searcht.cookies', cookies)
+            if user_info.get('auto_revenge'):
+                r_session.sadd('global:auto.revenge.cookies', cookies)
             if user_info.get('auto_getaward'):
                 r_session.sadd('global:auto.getaward.cookies', cookies)
 
