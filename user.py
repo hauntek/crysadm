@@ -80,13 +80,17 @@ def logout():
 def diary():
     user = session.get('user_info')
 
-    record_key = '%s:%s' % ('record', user.get('username'))
-
     diary_as = list()
-    for record in r_session.smembers(record_key):
-        diary = json.loads(record.decode('utf-8'))
-        if (datetime.now() - datetime.strptime(diary.get('time'), '%Y-%m-%d %H:%M:%S')).days < 7:
-            diary_as.append(diary)
+
+    today = datetime.now().date() + timedelta(days=-1)
+    begin_date = today + timedelta(days=-7)
+    while begin_date < datetime.now().date():
+        begin_date += timedelta(days=1)
+        key = 'record:%s:%s' % (user.get('username'), begin_date.strftime('%Y-%m-%d'))
+        b_data = r_session.get(key)
+        if b_data is None: continue
+        today_data = json.loads(b_data.decode('utf-8')).get('diary')
+        diary_as += today_data
 
     return render_template('diary.html', diary_user=sorted(diary_as, key=lambda x: x['time'], reverse=True))
 
@@ -95,8 +99,8 @@ def diary():
 def diary_del():
     user = session.get('user_info')
 
-    record_key = '%s:%s' % ('record', user.get('username'))
-    r_session.delete(record_key)
+    for key in r_session.keys('record:%s:*' % user.get('username')):
+        r_session.delete(key.decode('utf-8'))
 
     return redirect(url_for('diary'))
 
