@@ -105,11 +105,12 @@ def get_data(username):
 def save_history(username):
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'save_history')
 
-    today_data = dict()
     key = 'user_data:%s:%s' % (username, datetime.now().strftime('%Y-%m-%d'))
     b_today_data = r_session.get(key)
     if b_today_data is not None:
         today_data = json.loads(b_today_data.decode('utf-8'))
+    else:
+        today_data = dict()
 
     today_data['updated_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     today_data['pdc'] = 0
@@ -181,11 +182,12 @@ def save_income_history(username, pdc_detail):
 
     now = datetime.now()
 
-    income_history = dict()
     key = 'user_data:%s:%s' % (username, 'income.history')
     b_income_history = r_session.get(key)
     if b_income_history is not None:
         income_history = json.loads(b_income_history.decode('utf-8'))
+    else:
+        income_history = dict()
 
     #if now.minute < 50: return
 
