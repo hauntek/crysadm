@@ -6,7 +6,7 @@ from util import hash_password
 import json
 import uuid
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @app.route('/guest')
 def guest():
