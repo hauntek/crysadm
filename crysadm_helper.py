@@ -540,12 +540,20 @@ def regular_html(info):
 # 自动日记记录
 def loging(user, clas, types, userid, gets):
 
-    record_key = '%s:%s' % ('record', user.get('username'))
+    key = 'record:%s:%s' % (user.get('username'), datetime.now().strftime('%Y-%m-%d'))
+    b_today_data = r_session.get(key)
+    if b_today_data is not None:
+        today_data = json.loads(b_today_data.decode('utf-8'))
+    else:
+        today_data = dict()
+        today_data['diary'] = []
 
-    body = dict(clas=clas, type=types, id=userid, gets=gets,
-                time=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    log_as_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    body = dict(clas=clas, type=types, id=userid, gets=gets, time=log_as_time)
 
-    r_session.sadd(record_key, json.dumps(body))
+    today_data.get('diary').append(body)
+
+    r_session.setex(key, json.dumps(today_data), 3600 * 24 * 15)
 
 # 计时器函数，定期执行某个线程，时间单位为秒
 def timer(func, seconds):
