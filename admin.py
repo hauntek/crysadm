@@ -184,7 +184,6 @@ def admin_del_user(username):
 
     # do del user
     r_session.delete('%s:%s' % ('user', username))
-    r_session.delete('%s:%s' % ('record', username))
     r_session.srem('users', username)
     for b_account_id in r_session.smembers('accounts:' + username):
         account_id = b_account_id.decode('utf-8')
@@ -193,6 +192,9 @@ def admin_del_user(username):
     r_session.delete('accounts:' + username)
 
     for key in r_session.keys('user_data:%s:*' % username):
+        r_session.delete(key.decode('utf-8'))
+
+    for key in r_session.keys('record:%s:*' % username):
         r_session.delete(key.decode('utf-8'))
 
     return redirect(url_for('admin_user'))
