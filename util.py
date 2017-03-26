@@ -1,12 +1,12 @@
 __author__ = 'powergx'
-import hashlib
 from flask import session
 
 def hash_password(pwd):
+    import hashlib
     """
         :param pwd: input password
         :return: return hash md5 password
-        """
+    """
     from crysadm import app
 
     return hashlib.md5(str("%s%s" % (app.config.get("PASSWORD_PREFIX"), pwd)).encode('utf-8')).hexdigest()
