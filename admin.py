@@ -90,6 +90,7 @@ def generate_login_as(username):
 @app.route('/admin_user/<username>')
 @requires_admin
 def admin_user_management(username):
+
     err_msg = None
     if session.get('error_message') is not None:
         err_msg = session.get('error_message')
