@@ -1,4 +1,3 @@
-# Html － 数据分析
 __author__ = 'powergx'
 from flask import render_template, session, Response
 from crysadm import app, r_session
