@@ -6,8 +6,6 @@ from crysadm_helper import r_session
 from requests.adapters import HTTPAdapter
 from urllib.parse import urlparse, parse_qs
 
-requests.packages.urllib3.disable_warnings()
-
 # 迅雷API接口
 appversion = '3.1.7'
 server_address = 'http://1-api-red.xunlei.com'
