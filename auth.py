@@ -1,4 +1,3 @@
-# API 权限管理
 __author__ = 'powergx'
 from functools import wraps
 from flask import session, url_for, redirect
