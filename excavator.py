@@ -3,8 +3,7 @@ from flask import request, Response, session, render_template, url_for, redirect
 from crysadm import app, r_session
 from auth import requires_admin, requires_auth
 import json
-from urllib.parse import urlparse, parse_qs, unquote
-import re
+from urllib.parse import urlparse, parse_qs
 import time
 import threading
 from api import *
@@ -45,6 +44,8 @@ def excavators():
 
 # 正则过滤 + URL转码
 def regular_html(info):
+    import re
+    from urllib.parse import unquote
     regular = re.compile('<[^>]+>')
     url = unquote(info)
     return regular.sub("", url)
