@@ -104,7 +104,7 @@ def get_device_stat(s_type, cookies):
 def collect(cookies):
     cookies['origin'] = '4' if len(cookies.get('sessionid')) == 128 else '1'
     body = dict(hand='0', v='2', ver='1')
-    return api_post(url='/index.php?r=mine/collect', data=body, cookies=cookies)
+    return api_post(url='/?r=mine/collect', data=body, cookies=cookies)
 
 # 获取免费宝箱信息
 def api_giftbox(cookies):
@@ -224,15 +224,6 @@ def ubus_cd(session_id, account_id, action, out_params, url_param=None):
 
     except requests.exceptions.RequestException as e:
         return __handle_exception(e=e)
-
-# 发送设置链接
-def parse_setting_url(url):
-    query_s = parse_qs(urlparse(url).query, keep_blank_values=True)
-
-    device_id = query_s['device_id'][0]
-    session_id = query_s['session_id'][0]
-    account_id = query_s['user_id'][0]
-    return device_id, session_id, account_id
 
 # 检测是否API错误
 def is_api_error(r):
