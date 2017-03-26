@@ -61,28 +61,28 @@ def old_login(username, md5_password):
     device_sign = 'div100.%s%s' % (device_id, md5(sha1("%s%s%s%s" % (device_id, appName, 61, md5_key))))
 
     payload = json.dumps({
-            "protocolVersion": PROTOCOL_VERSION,
-            "sequenceNo": 1000001,
-            "platformVersion": 1,
-            "peerID": peer_id,
-            "businessType": 61,
-            "clientVersion": APP_VERSION,
-            "isCompressed": 0,
-            "cmdID": 1,
-            "userName": username,
-            "passWord": hash_password,
-            "loginType": 0,
-            "sessionID": "",
-            "verifyKey": "",
-            "verifyCode": "",
-            "appName": "ANDROID-%s" % appName,
-            "devicesign": device_sign,
-            "sdkVersion": 177588,
-            "rsaKey": {
-                "e": "%06X" % rsa_pubexp,
-                "n": long2hex(rsa_mod)
-            },
-            "extensionList": ""
+        "protocolVersion": PROTOCOL_VERSION,
+        "sequenceNo": 1000001,
+        "platformVersion": 1,
+        "peerID": peer_id,
+        "businessType": 61,
+        "clientVersion": APP_VERSION,
+        "isCompressed": 0,
+        "cmdID": 1,
+        "userName": username,
+        "passWord": hash_password,
+        "loginType": 0,
+        "sessionID": "",
+        "verifyKey": "",
+        "verifyCode": "",
+        "appName": "ANDROID-%s" % appName,
+        "devicesign": device_sign,
+        "sdkVersion": 177588,
+        "rsaKey": {
+            "e": "%06X" % rsa_pubexp,
+            "n": long2hex(rsa_mod)
+        },
+        "extensionList": ""
     })
 
     headers = {'User-Agent': "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Mobile/9B176 MicroMessenger/4.3.2"}
