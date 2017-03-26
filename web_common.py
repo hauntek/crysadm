@@ -437,8 +437,7 @@ def header_info():
         return dict()
     user = session.get('user_info')
 
-    str_today = datetime.now().strftime('%Y-%m-%d')
-    key = 'user_data:%s:%s' % (user.get('username'), str_today)
+    key = 'user_data:%s:%s' % (user.get('username'), datetime.now().strftime('%Y-%m-%d'))
 
     data = dict(balance=0)
 
