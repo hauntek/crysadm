@@ -75,7 +75,7 @@ def old_login(username, md5_password):
             "sessionID": "",
             "verifyKey": "",
             "verifyCode": "",
-            "appName": "ANDROID-com.xunlei.redcrystalandroid",
+            "appName": "ANDROID-%s" % appName,
             "devicesign": device_sign,
             "sdkVersion": 177588,
             "rsaKey": {
