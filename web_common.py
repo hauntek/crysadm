@@ -53,8 +53,7 @@ def dashboard_data():
     user = session.get('user_info')
     username = user.get('username')
 
-    str_today = datetime.now().strftime('%Y-%m-%d')
-    key = 'user_data:%s:%s' % (username, str_today)
+    key = 'user_data:%s:%s' % (username, datetime.now().strftime('%Y-%m-%d'))
 
     b_data = r_session.get(key)
     if b_data is None:
