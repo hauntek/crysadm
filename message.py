@@ -3,7 +3,6 @@ from flask import request, Response, session, render_template, url_for, redirect
 from crysadm import app, r_session
 from auth import requires_admin, requires_auth
 import json
-from util import get_message, set_message
 import uuid
 from datetime import datetime, timedelta
 
@@ -11,7 +10,11 @@ from datetime import datetime, timedelta
 @requires_auth
 def messagebox():
     user = session.get('user_info')
-    err_msg = util.get_message()
+
+    err_msg = None
+    if session.get('error_message') is not None:
+        err_msg = session.get('error_message')
+        session['error_message'] = None
 
     msgs_key = 'user_messages:%s' % user.get('username')
 
@@ -37,7 +40,7 @@ def message_action():
     user = session.get('user_info')
 
     if request.form['btn'] is None:
-        util.set_message('参数错误')
+        session['error_message'] = '参数错误'
         return redirect(url_for('messagebox'))
 
     msgs_key = 'user_messages:%s' % user.get('username')
