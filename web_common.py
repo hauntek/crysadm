@@ -387,9 +387,7 @@ def add_function():
         import hashlib
         import base64
         key = '%s%s%s' % (sn, mac, 'i8e%Fvj24nz024@d!c')
-        m = hashlib.md5()
-        m.update(key.encode('utf-8'))
-        md5 = m.digest()
+        md5 = hashlib.md5(key.encode('utf-8')).digest()
         passwd = base64.b64encode(md5).decode('utf-8')
         passwd = passwd[0:8]
         passwd = passwd.replace('+', '-')
