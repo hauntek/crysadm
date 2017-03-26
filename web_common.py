@@ -113,9 +113,11 @@ def dashboard_speed_share():
             if device.get('status') != 'online': continue
             uploadspeed = int(int(device.get('dcdn_upload_speed')) / 1024)
             total_speed += uploadspeed
+
             device_speed.append(dict(name=device.get('device_name'), value=uploadspeed))
             # downloadspeed = int(int(device_info.get('dcdn_deploy_speed')) / 1024)
             # total_speed += downloadspeed
+
             # device_speed.append(dict(name=device_info.get('device_name'), value=total_speed))
 
         # 显示在速度分析器圆形图表上的设备ID
