@@ -107,7 +107,7 @@ def admin_change_password(username):
 
     if len(n_password) < 8:
         session['error_message'] = '密码必须8位以上.'
-        return redirect(url_for(endpoint='admin_user_management', username=username))
+        return redirect(url_for('admin_user_management', username=username))
 
     user_key = '%s:%s' % ('user', username)
     user_info = json.loads(r_session.get(user_key).decode('utf-8'))
@@ -115,7 +115,7 @@ def admin_change_password(username):
     user_info['password'] = hash_password(n_password)
     r_session.set(user_key, json.dumps(user_info))
 
-    return redirect(url_for(endpoint='admin_user_management', username=username))
+    return redirect(url_for('admin_user_management', username=username))
 
 # 系统管理 => 用户管理 => 编辑用户资料 => 修改其它属性
 @app.route('/admin/change_property/<field>/<value>/<username>', methods=['POST'])
@@ -147,7 +147,7 @@ def admin_change_property(field, value, username):
 
     r_session.set(user_key, json.dumps(user_info))
 
-    return redirect(url_for(endpoint='admin_user_management', username=username))
+    return redirect(url_for('admin_user_management', username=username))
 
 # 系统管理 => 用户管理 => 编辑用户资料 => 提示信息
 @app.route('/admin/change_user_info/<username>', methods=['POST'])
@@ -158,11 +158,11 @@ def admin_change_user_info(username):
     r = r"^[1-9]\d*$"
     if re.match(r, max_account_no) is None:
         session['error_message'] = '迅雷账号限制必须为整数.'
-        return redirect(url_for(endpoint='admin_user_management', username=username))
+        return redirect(url_for('admin_user_management', username=username))
 
     if not 0 < int(max_account_no) < 101:
         session['error_message'] = '迅雷账号限制必须为 1~100.'
-        return redirect(url_for(endpoint='admin_user_management', username=username))
+        return redirect(url_for('admin_user_management', username=username))
 
     user_key = '%s:%s' % ('user', username)
     user_info = json.loads(r_session.get(user_key).decode('utf-8'))
@@ -171,7 +171,7 @@ def admin_change_user_info(username):
 
     r_session.set(user_key, json.dumps(user_info))
 
-    return redirect(url_for(endpoint='admin_user_management', username=username))
+    return redirect(url_for('admin_user_management', username=username))
 
 # 系统管理 => 用户管理 => 删除用户
 @app.route('/admin/del_user/<username>', methods=['GET'])
@@ -179,7 +179,7 @@ def admin_change_user_info(username):
 def admin_del_user(username):
     if r_session.get('%s:%s' % ('user', username)) is None:
         session['error_message'] = '账号不存在'
-        return redirect(url_for(endpoint='admin_user', username=username))
+        return redirect(url_for('admin_user', username=username))
 
     # do del user
     r_session.delete('%s:%s' % ('user', username))
@@ -272,7 +272,7 @@ def admin_message_send():
     else:
         send_msg(to, subject, send_content, 3600 * 24)
 
-    return redirect(url_for(endpoint='admin_message'))
+    return redirect(url_for('admin_message'))
 
 # 关于
 @app.route('/about')
