@@ -1,5 +1,4 @@
 __author__ = 'powergx'
-from flask import session
 
 def hash_password(pwd):
     import hashlib
@@ -20,16 +19,3 @@ def sha1(s):
     import hashlib
 
     return hashlib.sha1(s.encode('utf-8')).hexdigest().lower()
-
-def get_message():
-    err_msg = None
-    if session.get('error_message') is not None:
-        err_msg = session.get('error_message')
-        session['error_message'] = None
-    return err_msg
-
-def set_message(message,type='error'):
-    if type == 'error':
-        session['error_message'] = message
-    elif type == 'info':
-        session['info_message'] = message
