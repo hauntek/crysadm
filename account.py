@@ -1,4 +1,3 @@
-# 迅雷帐号绑定html页面
 __author__ = 'powergx'
 from flask import request, Response, session, render_template, url_for, redirect
 from crysadm import app, r_session
