@@ -2,8 +2,8 @@ __author__ = 'powergx'
 from flask import request, Response, session, render_template, url_for, redirect
 from crysadm import app, r_session
 from auth import requires_admin, requires_auth
-import util
 import json
+from util import get_message, set_message
 import uuid
 from datetime import datetime, timedelta
 
