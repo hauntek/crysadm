@@ -96,31 +96,31 @@ def dashboard_speed_share():
     user = session.get('user_info')
     username = user.get('username')
 
-    accounts_key = 'accounts:%s' % username
-
     drilldown_data = []
-    for b_acct in r_session.mget(*['account:%s:%s:data' % (username, name.decode('utf-8'))
-                                   for name in sorted(r_session.smembers(accounts_key))]):
+    for user_id in sorted(r_session.smembers('accounts:%s' % username)):
 
-        account_info = json.loads(b_acct.decode("utf-8"))
-        mid = str(account_info.get('privilege').get('mid'))
+        account_data_key = 'account:%s:%s:data' % (username, user_id.decode('utf-8'))
+        b_data = r_session.get(account_data_key)
+        if b_data is None:
+            continue
+        data = json.loads(b_data.decode('utf-8'))
+
+        mid = str(data.get('privilege').get('mid'))
 
         total_speed = 0
         device_speed = []
-
-        for device_info in account_info.get('device_info'):
-            if device_info.get('status') != 'online':
-                continue
-            uploadspeed = int(int(device_info.get('dcdn_upload_speed')) / 1024)            
-            #downloadspeed = int(int(device_info.get('dcdn_deploy_speed')) / 1024)
+        for device in data.get('device_info'):
+            if device.get('status') != 'online': continue
+            uploadspeed = int(int(device.get('dcdn_upload_speed')) / 1024)
+            total_speed += uploadspeed
+            device_speed.append(dict(name=device.get('device_name'), value=uploadspeed))
+            # downloadspeed = int(int(device_info.get('dcdn_deploy_speed')) / 1024)
             # total_speed += downloadspeed
-            total_speed += uploadspeed            
-            device_speed.append(dict(name=device_info.get('device_name'), value=uploadspeed))            
             # device_speed.append(dict(name=device_info.get('device_name'), value=total_speed))
 
         # 显示在速度分析器圆形图表上的设备ID
         drilldown_data.append(dict(name='矿主ID:' + mid, value=total_speed, drilldown_data=device_speed))
-        #drilldown_data.append(dict(name='设备名:' + device_info.get('device_name'), value=total_speed, drilldown_data=device_speed))
+        # drilldown_data.append(dict(name='设备名:' + device_info.get('device_name'), value=total_speed, drilldown_data=device_speed))
 
     return Response(json.dumps(dict(data=drilldown_data)), mimetype='application/json')
 
