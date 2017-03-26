@@ -32,21 +32,24 @@ def accounts():
 @app.route('/account/add', methods=['POST'])
 @requires_auth
 def account_add():
+    user = session.get('user_info')
+
     account_name = request.values.get('xl_username')
     password = request.values.get('xl_password')
 
     md5_password = md5(password)
 
-    user = session.get('user_info')
+    user_key = '%s:%s' % ('user', user.get('username'))
+    user_info = json.loads(r_session.get(user_key).decode('utf-8'))
 
-    if user.get('max_account_no') is None:
-        user['max_account_no'] = 1
+    if user_info.get('max_account_no') is None:
+        user_info['max_account_no'] = 1
 
     accounts_key = 'accounts:%s' % user.get('username')
 
     account_no = r_session.scard(accounts_key)
     if account_no is not None:
-        if account_no >= user.get('max_account_no'):
+        if account_no >= user_info.get('max_account_no'):
             session['error_message'] = '你的账号限制%d个账户。' % account_no
             return redirect(url_for('accounts'))
 
