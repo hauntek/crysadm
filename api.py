@@ -4,7 +4,6 @@ import json
 import time
 from crysadm_helper import r_session
 from requests.adapters import HTTPAdapter
-from urllib.parse import urlparse, parse_qs
 
 # 迅雷API接口
 appversion = '3.1.7'
