@@ -4,8 +4,8 @@ from crysadm import app, r_session
 from auth import requires_admin, requires_auth
 from util import hash_password
 import json
-import uuid
 import re
+import uuid
 from datetime import datetime, timedelta
 
 @app.route('/guest')
