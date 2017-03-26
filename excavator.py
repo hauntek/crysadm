@@ -1,4 +1,3 @@
-# Html － 我的矿机
 __author__ = 'powergx'
 from flask import request, Response, session, render_template, url_for, redirect
 from crysadm import app, r_session
@@ -8,7 +7,7 @@ from urllib.parse import urlparse, parse_qs, unquote
 import re
 import time
 import threading
-from api import ubus_cd, collect, exec_draw_cash, api_sys_getEntry, api_steal_search, api_steal_collect, api_steal_summary, api_getaward
+from api import *
 
 # 加载矿机主页面
 @app.route('/excavators')
