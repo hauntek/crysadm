@@ -24,7 +24,7 @@ def requires_admin(f):
         if user_info.get('is_admin') is None or not user_info.get('is_admin'):
             session['user_info'] = user_info
             return redirect(url_for('dashboard'))
-        __handshake()
+        __handshake(user)
         return f(*args, **kwargs)
 
     return decorated
@@ -42,14 +42,13 @@ def requires_auth(f):
         if r_session.get(user_key) is None:
             session.clear()
             return redirect(url_for('login'))
-        __handshake()
+        __handshake(user)
         return f(*args, **kwargs)
 
     return decorated
 
 # 加入在线用户列表
-def __handshake():
-    user = session.get('user_info')
+def __handshake(user):
     username = user.get('username')
     r_session.setex('user:%s:is_online' % username, '1', 120)
     r_session.sadd('global:online.users', username)
