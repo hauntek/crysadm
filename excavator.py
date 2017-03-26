@@ -175,10 +175,10 @@ def check_searcht(cookies):
         steal_info = api_steal_search(cookies)
         if steal_info.get('r') != 0:
             return steal_info
-        r = api_steal_collect(cookies=cookies, searcht_id=steal_info.get('sid'))
+        r = api_steal_collect(cookies, steal_info.get('sid'))
         if r.get('r') != 0:
             return dict(r='-1', rd='Forbidden')
-        api_steal_summary(cookies=cookies, searcht_id=steal_info.get('sid'))
+        api_steal_summary(cookies, steal_info.get('sid'))
         return r
     return dict(r='-1', rd='体力值为零')
 
