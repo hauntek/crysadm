@@ -133,23 +133,24 @@ def dashboard_speed_detail():
     user = session.get('user_info')
     username = user.get('username')
 
-    accounts_key = 'accounts:%s' % username
-
     device_speed = []
-    for b_acct in r_session.mget(*['account:%s:%s:data' % (username, name.decode('utf-8'))
-                                   for name in sorted(r_session.smembers(accounts_key))]):
+    for user_id in sorted(r_session.smembers('accounts:%s' % username)):
 
-        account_info = json.loads(b_acct.decode("utf-8"))
+        account_data_key = 'account:%s:%s:data' % (username, user_id.decode('utf-8'))
+        b_data = r_session.get(account_data_key)
+        if b_data is None:
+            continue
+        data = json.loads(b_data.decode('utf-8'))
 
-        for device_info in account_info.get('device_info'):
-            if device_info.get('status') != 'online':
-                continue
-            upload_speed = int(int(device_info.get('dcdn_upload_speed')) / 1024)
-            deploy_speed = int(device_info.get('dcdn_download_speed') / 1024)
+        for device in data.get('device_info'):
+            if device.get('status') != 'online': continue
+            upload_speed = int(int(device.get('dcdn_upload_speed')) / 1024)
+            deploy_speed = int(int(device.get('dcdn_download_speed')) / 1024)
 
-            device_speed.append(dict(name=device_info.get('device_name'), upload_speed=upload_speed, deploy_speed=deploy_speed))
+            device_speed.append(dict(name=device.get('device_name'), upload_speed=upload_speed, deploy_speed=deploy_speed))
 
     device_speed = sorted(device_speed, key=lambda k: k.get('name'))
+
     categories = []
     upload_series = dict(name='上传速度', data=[], pointPadding=0.3, pointPlacement=-0.2)
     deploy_series = dict(name='下载速度', data=[], pointPadding=0.4, pointPlacement=-0.2)
