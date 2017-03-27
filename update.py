@@ -13,9 +13,12 @@ import threading
 
 service_url = 'http://down.crysadmapp.cn/crysadm/'
 rootdir = os.path.dirname(os.path.abspath(sys.argv[0])) # 脚本当前路径
-ignore_file = ['config.py'] # 忽略文件
+ignore_file = [] # 忽略文件
 
 progress = 0
+
+if os.path.exists(os.path.join(rootdir, 'config.py')):
+    ignore_file.append('config.py')
 
 def urlopen(url):
     return urllib.request.urlopen(url).readlines()
