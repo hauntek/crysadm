@@ -168,16 +168,20 @@ def dashboard_today_income_share():
     user = session.get('user_info')
     username = user.get('username')
 
-    accounts_key = 'accounts:%s' % username
-
     pie_data = []
-    for b_acct in r_session.mget(*['account:%s:%s:data' % (username, name.decode('utf-8'))
-                                   for name in sorted(r_session.smembers(accounts_key))]):
-        account_info = json.loads(b_acct.decode("utf-8"))
-        mid = str(account_info.get('privilege').get('mid'))
+    for user_id in sorted(r_session.smembers('accounts:%s' % username)):
+
+        account_data_key = 'account:%s:%s:data' % (username, user_id.decode('utf-8'))
+        b_data = r_session.get(account_data_key)
+        if b_data is None:
+            continue
+        data = json.loads(b_data.decode('utf-8'))
+
+        mid = str(data.get('privilege').get('mid'))
 
         total_value = 0
-        total_value += account_info.get('mine_info').get('dev_m').get('pdc')
+        this_pdc = data.get('mine_info').get('dev_m').get('pdc')
+        total_value += this_pdc
 
         pie_data.append(dict(name='矿主ID:' + mid, y=total_value))
 
