@@ -65,9 +65,9 @@ def get_data(username):
             red_zqb = device_info['result'][1]
 
             account_data_key = account_key + ':data'
-            exist_account_data = r_session.get(account_data_key)
-            if exist_account_data is not None:
-                account_data = json.loads(exist_account_data.decode('utf-8'))
+            b_account_data = r_session.get(account_data_key)
+            if b_account_data is not None:
+                account_data = json.loads(b_account_data.decode('utf-8'))
             else:
                 account_data = dict()
                 account_data['privilege'] = get_privilege(cookies)
