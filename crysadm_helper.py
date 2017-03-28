@@ -88,10 +88,11 @@ def get_data(username):
                 return
 
             r_session.set(account_data_key, json.dumps(account_data))
-            if not r_session.exists('can_drawcash'):
+            if not r_session.exists('ttl_drawcash'):
                 r = get_can_drawcash(cookies)
                 if r.get('r') == 0 and r.get('is_tm') == 1:
-                    r_session.setex('can_drawcash', '1', 60)
+                    r_session.setex('can_drawcash', '1', 120)
+                r_session.setex('ttl_drawcash', '1', 60)
 
         if start_time.day == datetime.now().day:
             save_history(username)
