@@ -596,7 +596,7 @@ if __name__ == '__main__':
     # 每60秒刷新一次离线用户数据
     threading.Thread(target=timer, args=(get_offline_user_data, 60)).start()
     # 从在线用户列表中清除离线用户，单位为秒，默认为60秒。
-    # 每分钟检测离线用户
+    # 每60秒检测一次用户是否在线
     threading.Thread(target=timer, args=(clear_offline_user, 60)).start()
     # 刷新选择自动任务的用户，单位为秒，默认为10分钟
     threading.Thread(target=timer, args=(select_auto_task_user, 60*10)).start()
