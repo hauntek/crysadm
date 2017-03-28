@@ -37,8 +37,7 @@ def excavators():
             account_info['data'] = json.loads(account_data_value.decode("utf-8"))
         accounts.append(account_info)
 
-    show_drawcash = not (r_session.get('can_drawcash') is None or
-                         r_session.get('can_drawcash').decode('utf-8') == '0')
+    show_drawcash = r_session.exists('can_drawcash')
 
     return render_template('excavators.html', err_msg=err_msg, info_msg=info_msg, accounts=accounts,
                            show_drawcash=show_drawcash)
