@@ -132,8 +132,8 @@ def save_history(username):
         data = json.loads(b_data.decode('utf-8'))
 
         last_speed = 0
-        if datetime.strptime(data.get('updated_time'), '%Y-%m-%d %H:%M:%S') + timedelta(minutes=45) < datetime.now() or \
-            datetime.strptime(data.get('updated_time'), '%Y-%m-%d %H:%M:%S').day != datetime.now().day:
+        updated_time = datetime.strptime(data.get('updated_time'), '%Y-%m-%d %H:%M:%S')
+        if updated_time + timedelta(minutes=30) < datetime.now() or updated_time.day != datetime.now().day:
             continue
 
         this_pdc = data.get('mine_info').get('dev_m').get('pdc')
@@ -157,7 +157,7 @@ def save_history(username):
         if data.get('zqb_speed_stat_times') is None:
             data['zqb_speed_stat_times'] = 0
 
-        if data['zqb_speed_stat_times'] == datetime.now().hour:
+        if data['zqb_speed_stat_times'] == updated_time.hour:
             if data.get('zqb_speed_stat')[23] != 0:
                 last_speed = int((last_speed + data.get('zqb_speed_stat')[23] / 8) / 2) # 计算平均值
                 data.get('zqb_speed_stat')[23] = last_speed * 8
@@ -165,7 +165,7 @@ def save_history(username):
             del data['zqb_speed_stat'][0]
             data['zqb_speed_stat'].append(last_speed * 8)
 
-        data['zqb_speed_stat_times'] = datetime.now().hour
+        data['zqb_speed_stat_times'] = updated_time.hour
 
         r_session.set(account_data_key, json.dumps(data))
         # 新速度统计
