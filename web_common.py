@@ -278,10 +278,10 @@ def DoD_income_xunlei(open_speeds):
 
     now = datetime.now()
 
-    today_series = dict(name='今日', data=[], pointPadding=0.2, pointPlacement=0, color='#676A6C')
-    yesterday_series = dict(name='昨日', data=[], pointPadding=-0.1, pointPlacement=0, color='#1AB394')
-    today_speed_series = dict(name='今日', data=[], pointPadding=0.2, pointPlacement=0, color='#676A6C', type='spline', tooltip=dict(valueSuffix=' kbps'))
-    yesterday_speed_series = dict(name='昨日', data=[], pointPadding=-0.1, pointPlacement=0, color='#1AB394',type='spline', tooltip=dict(valueSuffix=' kbps'))
+    today_series = dict(name='今日', data=[], pointPadding=0.2, pointPlacement=0, color='#676A6C', yAxis=0)
+    yesterday_series = dict(name='昨日', data=[], pointPadding=-0.1, pointPlacement=0, color='#1AB394', yAxis=0)
+    today_speed_series = dict(name='今日', data=[], pointPadding=0.2, pointPlacement=0, color='#F15C80', type='spline', tooltip=dict(valueSuffix=' kbps'), yAxis=1)
+    yesterday_speed_series = dict(name='昨日', data=[], pointPadding=-0.1, pointPlacement=0, color='#00B2EE',type='spline', tooltip=dict(valueSuffix=' kbps'), yAxis=1)
 
     key = 'user_data:%s:%s' % (username, now.strftime('%Y-%m-%d'))
 
