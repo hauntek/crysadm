@@ -41,6 +41,7 @@ def get_data(username):
             cookies = dict(sessionid=session_id, userid=str(user_id))
 
             mine_info = get_mine_info(cookies)
+            time.sleep(3)
             if is_api_error(mine_info):
                 print('get_data:', user_id, 'mine_info', 'error')
                 return
