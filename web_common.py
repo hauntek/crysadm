@@ -198,7 +198,7 @@ def dashboard_DoD_income():
     if not user_info.get('auto_column'):
         dod_income = DoD_income_yuanjiangong()
     else:
-        dod_income = DoD_income_xunlei()
+        dod_income = DoD_income_xunlei(True)
 
     return dod_income
 
@@ -272,45 +272,48 @@ def DoD_income_yuanjiangong():
                                     )), mimetype='application/json')
 
 # 迅雷统计
-def DoD_income_xunlei():
+def DoD_income_xunlei(open_speeds):
     user = session.get('user_info')
     username = user.get('username')
 
-    key = 'user_data:%s:%s' % (username, 'income.history')
-
-    b_income_history = r_session.get(key)
-    if b_income_history is None:
-        return Response(json.dumps(dict(data=[])), mimetype='application/json')
-
-    income_history = json.loads(b_income_history.decode('utf-8'))
+    now = datetime.now()
 
     today_series = dict(name='今日', data=[], pointPadding=0.2, pointPlacement=0, color='#676A6C')
     yesterday_series = dict(name='昨日', data=[], pointPadding=-0.1, pointPlacement=0, color='#1AB394')
+    today_speed_series = dict(name='今日', data=[], pointPadding=0.2, pointPlacement=0, color='#676A6C', type='spline', tooltip=dict(valueSuffix=' kbps'))
+    yesterday_speed_series = dict(name='昨日', data=[], pointPadding=-0.1, pointPlacement=0, color='#1AB394',type='spline', tooltip=dict(valueSuffix=' kbps'))
 
-    now = datetime.now()
     key = 'user_data:%s:%s' % (username, now.strftime('%Y-%m-%d'))
+
     b_today_data_new = r_session.get(key)
-    today_data = json.loads(b_today_data_new.decode('utf-8'))
-    
-    today_series['data'] = []
-    for i in range(24-now.hour, 25):
-        temp = 0 
-        for hourly_produce in today_data.get('produce_stat'):
-            temp +=  hourly_produce.get('hourly_list')[i]
-        today_series['data'].append(temp)
+    if b_today_data_new is None:
+        today_series['data'] = [0] * 24
+        today_speed_series['data'] = [0] * 24
+    else:
+        today_data = json.loads(b_today_data_new.decode('utf-8'))
+        for i in range(24-now.hour, 25):
+            temp = 0
+            for hourly_produce in today_data.get('produce_stat'):
+                temp +=  hourly_produce.get('hourly_list')[i]
+            today_series['data'].append(temp)
+        today_speed_data = today_data.get('speed_stat')
+        for i in range(0, 24):
+            if i + now.hour < 24:
+                continue
+            if today_speed_data is None:
+                today_speed_series['data'] = []
+            else:
+                today_speed_series['data'].append(sum(row.get('dev_speed')[i] for row in today_speed_data))
+        today_speed_series['data'].append(today_data.get('last_speed')*8)
 
     key = 'user_data:%s:%s' % (username, (now + timedelta(days=-1)).strftime('%Y-%m-%d'))
+
     b_yesterday_data_new = r_session.get(key)
-
-    today_speed_series = dict(name='今日', data=[], type = 'spline', pointPadding=0.2, pointPlacement=0, color='#676A6C', tooltip=dict(valueSuffix=' kbps'))
-    yesterday_speed_series = dict(name='昨日', data=[], type = 'spline', pointPadding=-0.1, pointPlacement=0, color='#1AB394', tooltip=dict(valueSuffix=' kbps'))
-    today_speed_data = today_data.get('speed_stat')
-
     if b_yesterday_data_new is None:
-        yesterday_series['data'] = []
+        yesterday_series['data'] = [0] * 24
+        yesterday_speed_series['data'] = [0] * 24
     else:
         yesterday_data = json.loads(b_yesterday_data_new.decode('utf-8'))
-        yesterday_series['data'] = []
         for i in range(1, 25):
             if yesterday_data.get('produce_stat')[0].get('hourly_list') is None:
                 break
@@ -318,22 +321,16 @@ def DoD_income_xunlei():
             for hourly_produce in yesterday_data.get('produce_stat'):
                 temp += hourly_produce.get('hourly_list')[i]
             yesterday_series['data'].append(temp)
-            yesterday_speed_data = yesterday_data.get('speed_stat')
+        yesterday_speed_data = yesterday_data.get('speed_stat')
         for i in range(0, 24):
-            if yesterday_speed_data is not None:
-                yesterday_speed_series['data'].append(sum(row.get('dev_speed')[i] for row in yesterday_speed_data))
-            else:
+            if yesterday_speed_data is None:
                 yesterday_speed_series['data'] = []
+            else:
+                yesterday_speed_series['data'].append(sum(row.get('dev_speed')[i] for row in yesterday_speed_data))
 
-    for i in range(0, 24):
-        if i + now.hour < 24:
-            continue
-        if today_speed_data is not None:
-            today_speed_series['data'].append(sum(row.get('dev_speed')[i] for row in today_speed_data))
-
-    today_speed_series['data'].append(today_data.get('last_speed')*8)
     now_income_value = sum(today_series['data'][0:now.hour])
-    dod_income_value = sum(yesterday_series['data'][:now.hour])
+    dod_income_value = sum(yesterday_series['data'][0:now.hour])
+
     yesterday_last_value = sum(yesterday_series['data'][:])
 
     expected_income = '-'
@@ -342,7 +339,9 @@ def DoD_income_xunlei():
 
     if len(yesterday_series['data']) != 0:
         dod_income_value += int((yesterday_series['data'][now.hour]) / 60 * now.minute)
-    return Response(json.dumps(dict(series=[yesterday_series, today_series, yesterday_speed_series, today_speed_series],
+    set_series = [yesterday_series, today_series]
+    if open_speeds: set_series += [yesterday_speed_series, today_speed_series]
+    return Response(json.dumps(dict(series=set_series,
                                     data=dict(last_day_income=yesterday_last_value, dod_income_value=dod_income_value,
                                               expected_income=expected_income)
                                     )), mimetype='application/json')
