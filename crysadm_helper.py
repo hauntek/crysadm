@@ -286,7 +286,7 @@ def select_auto_task_user():
 
             session_id = account_info.get('session_id')
             user_id = account_info.get('user_id')
-            cookies = json.dumps(dict(sessionid=session_id, userid=user_id, user_info=user_info))
+            cookies = json.dumps(dict(sessionid=session_id, userid=str(user_id), user_info=user_info))
 
             if user_info.get('auto_collect'):
                 r_session.sadd('global:auto.collect.cookies', cookies)
