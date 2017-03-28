@@ -66,11 +66,11 @@ def get_data(username):
 
             account_data_key = account_key + ':data'
             exist_account_data = r_session.get(account_data_key)
-            if exist_account_data is None:
+            if exist_account_data is not None:
+                account_data = json.loads(exist_account_data.decode('utf-8'))
+            else:
                 account_data = dict()
                 account_data['privilege'] = get_privilege(cookies)
-            else:
-                account_data = json.loads(exist_account_data.decode('utf-8'))
 
             account_data['updated_time'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             account_data['mine_info'] = mine_info
