@@ -90,8 +90,8 @@ def get_data(username):
             r_session.set(account_data_key, json.dumps(account_data))
             if not r_session.exists('can_drawcash'):
                 r = get_can_drawcash(cookies)
-                if r.get('r') == 0:
-                    r_session.setex('can_drawcash', r.get('is_tm'), 60)
+                if r.get('r') == 0 and r.get('is_tm') == 1:
+                    r_session.setex('can_drawcash', '1', 60)
 
         if start_time.day == datetime.now().day:
             save_history(username)
@@ -491,8 +491,7 @@ def collect_crystal():
 def drawcash_crystal():
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'drawcash_crystal')
 
-    if r_session.get('can_drawcash') is None or r_session.get('can_drawcash').decode('utf-8') == '0':
-        return
+    if not r_session.exists('can_drawcash'): return
 
     for cookie in r_session.smembers('global:auto.drawcash.cookies'):
         check_drawcash(json.loads(cookie.decode('utf-8')))
