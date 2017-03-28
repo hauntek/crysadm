@@ -22,18 +22,27 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title" style="height:42px;">
                     今日统计
-                    {% if accounts|length >0 %}
-                        {% if show_drawcash %}
-                            <form role="form" style="margin-left: 3px;float:right;" action="/drawcash/all" method="post">
-                                <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要所有账号提现?')" class="btn btn-info btn-xs">所有账号提现</button>
-                            </form>
-                        {% endif %}
-                        <form role="form" style="margin-left: 3px;float:right;" action="/getaward/all" method="post">
-                            <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要所有账号转盘?')" class="btn btn-info btn-xs">所有账号转盘</button>
-                        </form>
-                        <form role="form" style="margin-left: 3px;float:right;" action="/collect/all" method="post">
-                            <button type="submit" style="margin: 0px;" onclick="javascript:return confirm('确认要收取所有水晶?')" class="btn btn-info btn-xs">收取所有水晶</button>
-                        </form>
+                    {% if accounts|length > 0 %}
+                    <div class="ibox-tools" style="float:right;">
+                        <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown"> 全部账号操作 <span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form role="form" id="collect_all" action="/collect/all" method="post"></form>
+                                <a onclick="javascript:if (confirm('确认要收取所有水晶?')) {return document.getElementById('collect_all').submit();}"> 收取所有水晶</a>
+                            </li>
+                            <li>
+                                <form role="form" id="getaward_all" action="/getaward/all" method="post"></form>
+                                <a onclick="javascript:if (confirm('确认要所有账号转盘?')) {return document.getElementById('getaward_all').submit();}"> 所有账号转盘</a>
+                            </li>
+                            {% if show_drawcash %}
+                            <li class="divider"></li>
+                            <li>
+                                <form role="form" id="drawcash_all" action="/drawcash/all" method="post"></form>
+                                <a onclick="javascript:if (confirm('确认要所有账号提现?')) {return document.getElementById('drawcash_all').submit();}"> 所有账号提现</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
                     {% endif %}
                 </div>
                 <div class="ibox-content">
