@@ -115,14 +115,8 @@ def dashboard_speed_share():
             total_speed += uploadspeed
 
             device_speed.append(dict(name=device.get('device_name'), value=uploadspeed))
-            # downloadspeed = int(int(device_info.get('dcdn_deploy_speed')) / 1024)
-            # total_speed += downloadspeed
 
-            # device_speed.append(dict(name=device_info.get('device_name'), value=total_speed))
-
-        # 显示在速度分析器圆形图表上的设备ID
         drilldown_data.append(dict(name='矿主ID:' + mid, value=total_speed, drilldown_data=device_speed))
-        # drilldown_data.append(dict(name='设备名:' + device_info.get('device_name'), value=total_speed, drilldown_data=device_speed))
 
     return Response(json.dumps(dict(data=drilldown_data)), mimetype='application/json')
 
@@ -145,7 +139,7 @@ def dashboard_speed_detail():
         for device in data.get('device_info'):
             if device.get('status') != 'online': continue
             upload_speed = int(int(device.get('dcdn_upload_speed')) / 1024)
-            deploy_speed = int(int(device.get('dcdn_download_speed')) / 1024)
+            deploy_speed = int(device.get('dcdn_download_speed') / 1024)
 
             device_speed.append(dict(name=device.get('device_name'), upload_speed=upload_speed, deploy_speed=deploy_speed))
 
