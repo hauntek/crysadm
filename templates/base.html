@@ -14,6 +14,21 @@
     <link href="../static/css/animate.css" rel="stylesheet">
     <link href="../static/css/style.css" rel="stylesheet">
 
+    <style>
+        @media (max-width: 640px) {
+            .top-navigation .wrapper.wrapper-content {
+                padding: 0px;
+            }
+            #page-wrapper {
+                padding:0px 5px 0px 5px;
+                margin:0;
+            }
+            .table-responsive {
+                border: 0px solid #ddd;
+            }
+        }
+    </style>
+
 </head>
 {% set navigation_bar = [
     ('dashboard', '/dashboard', '监控中心', []),
