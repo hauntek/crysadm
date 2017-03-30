@@ -309,8 +309,7 @@ def DoD_income_xunlei(open_speeds):
     else:
         yesterday_data = json.loads(b_yesterday_data_new.decode('utf-8'))
         for i in range(1, 25):
-            if yesterday_data.get('produce_stat')[0].get('hourly_list') is None:
-                break
+            if yesterday_data.get('produce_stat') is None: break
             temp = 0
             for hourly_produce in yesterday_data.get('produce_stat'):
                 temp += hourly_produce.get('hourly_list')[i]
