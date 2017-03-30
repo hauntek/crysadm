@@ -165,7 +165,7 @@ def save_history(username):
             data.get('zqb_speed_stat')[23] = last_speed * 8
         else:
             del data['zqb_speed_stat'][0]
-            data['zqb_speed_stat'].append(last_speed * 8)
+            data.get('zqb_speed_stat').append(last_speed * 8)
 
         data['zqb_speed_stat_times'] = updated_time.hour
 
