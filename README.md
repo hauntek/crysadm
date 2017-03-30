@@ -2,8 +2,15 @@ Crysadm+ 云端监控
 =============
 ![image](https://github.com/hauntek/crysadm/raw/master/static/img/preview.png)
 
-最新更新：2017-03-29
+最新更新：2017-03-31
 在线预览：http://www.crysadmapp.cn/guest
+
+更新日记：2017-03-31
+=============
+
+1.优化手机端网页排版显示，支持首页方块双排
+
+2.修复部分矿机设备详情页面出错问题
 
 更新日记：2017-03-29
 =============
