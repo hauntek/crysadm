@@ -149,7 +149,7 @@ def user_change_info():
 
     r = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
     if re.match(r, email) is None:
-        session['error_message'] = '邮箱地址格式不正确.'
+        session['error_message'] = '电子邮箱地址格式不正确.'
         return redirect(url_for('user_profile'))
 
     user_key = '%s:%s' % ('user', user.get('username'))
@@ -201,11 +201,11 @@ def user_change_password():
     session['action'] = 'password'
 
     if n_password != n2_password:
-        session['error_message'] = '新密码输入不一致.'
+        session['error_message'] = '两次输入的新密码不一致.'
         return redirect(url_for('user_profile'))
 
     if len(n_password) < 8:
-        session['error_message'] = '密码必须8位及以上.'
+        session['error_message'] = '输入的新密码必须8位数以上.'
         return redirect(url_for('user_profile'))
 
     user_key = '%s:%s' % ('user', user.get('username'))
@@ -214,7 +214,7 @@ def user_change_password():
     hashed_password = hash_password(o_password)
 
     if user_info.get('password') != hashed_password:
-        session['error_message'] = '原密码错误'
+        session['error_message'] = '原密码不正确.'
         return redirect(url_for('user_profile'))
 
     user_info['password'] = hash_password(n_password)
@@ -256,19 +256,24 @@ def user_register():
         return redirect(url_for('register'))
 
     if username == '':
-        session['error_message'] = '账号名不能为空。'
+        session['error_message'] = '用户名不能为空.'
         return redirect(url_for('register'))
 
     if r_session.get('%s:%s' % ('user', username)) is not None:
-        session['error_message'] = '该账号名已存在。'
+        session['error_message'] = '该用户名已存在.'
+        return redirect(url_for('register'))
+
+    r = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+    if re.match(r, username) is None:
+        session['error_message'] = '用户名请输入电子邮箱地址.'
         return redirect(url_for('register'))
 
     if password != re_password:
-        session['error_message'] = '新密码输入不一致.'
+        session['error_message'] = '两次输入的密码不一致.'
         return redirect(url_for('register'))
 
     if len(password) < 8:
-        session['error_message'] = '密码必须8位及以上.'
+        session['error_message'] = '输入的密码必须8位数以上.'
         return redirect(url_for('register'))
 
     r_session.srem('invitation_codes', invitation_code)
