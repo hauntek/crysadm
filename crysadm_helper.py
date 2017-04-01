@@ -164,7 +164,7 @@ def save_history(username):
         if data.get('zqb_speed_stat_times') is None:
             data['zqb_speed_stat_times'] = 0
 
-        if data['zqb_speed_stat_times'] == updated_time.hour:
+        if data.get('zqb_speed_stat_times') == updated_time.hour:
             if data.get('zqb_speed_stat')[23] != 0:
                 this_speed = int((this_speed + data.get('zqb_speed_stat')[23] / 8) / 2) # 计算平均值
             data.get('zqb_speed_stat')[23] = this_speed * 8
