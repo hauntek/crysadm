@@ -125,6 +125,9 @@ def save_history(username):
     today_data['pdc_detail'] = []
     today_data['produce_stat'] = []
 
+    if today_data.get('refreshes') is None:
+        today_data['refreshes'] = 0
+
     for user_id in r_session.smembers('accounts:%s' % username):
         # 获取账号所有数据
         account_data_key = 'account:%s:%s:data' % (username, user_id.decode('utf-8'))
@@ -133,11 +136,13 @@ def save_history(username):
             continue
         data = json.loads(b_data.decode('utf-8'))
 
-        last_speed = 0
         updated_time = datetime.strptime(data.get('updated_time'), '%Y-%m-%d %H:%M:%S')
         if updated_time + timedelta(minutes=30) < datetime.now() or updated_time.day != datetime.now().day:
             continue
 
+        today_data['refreshes'] += 1
+
+        this_speed = 0
         this_pdc = data.get('mine_info').get('dev_m').get('pdc')
 
         today_data['pdc'] += this_pdc
@@ -148,7 +153,7 @@ def save_history(username):
         today_data['income'] += data.get('income').get('r_h_a')
         today_data.get('produce_stat').append(dict(mid=data.get('privilege').get('mid'), hourly_list=data.get('produce_info').get('hourly_list')))
         for device in data.get('device_info'):
-            last_speed += int(int(device.get('dcdn_upload_speed')) / 1024)
+            this_speed += int(int(device.get('dcdn_upload_speed')) / 1024)
             today_data['last_speed'] += int(int(device.get('dcdn_upload_speed')) / 1024)
             today_data['deploy_speed'] += int(device.get('dcdn_download_speed') / 1024)
 
@@ -161,11 +166,11 @@ def save_history(username):
 
         if data['zqb_speed_stat_times'] == updated_time.hour:
             if data.get('zqb_speed_stat')[23] != 0:
-                last_speed = int((last_speed + data.get('zqb_speed_stat')[23] / 8) / 2) # 计算平均值
-            data.get('zqb_speed_stat')[23] = last_speed * 8
+                this_speed = int((this_speed + data.get('zqb_speed_stat')[23] / 8) / 2) # 计算平均值
+            data.get('zqb_speed_stat')[23] = this_speed * 8
         else:
             del data['zqb_speed_stat'][0]
-            data.get('zqb_speed_stat').append(last_speed * 8)
+            data.get('zqb_speed_stat').append(this_speed * 8)
 
         data['zqb_speed_stat_times'] = updated_time.hour
 
