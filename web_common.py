@@ -39,12 +39,7 @@ def __get_yesterday_pdc(username):
 @app.route('/dashboard')
 @requires_auth
 def dashboard():
-    user = session.get('user_info')
-
-    user_key = 'user:%s' % user.get('username')
-    user_info = json.loads(r_session.get(user_key).decode('utf-8'))
-
-    return render_template('dashboard.html', user_info=user_info)
+    return render_template('dashboard.html')
 
 # 刷新控制面板数据
 @app.route('/dashboard_data')
@@ -438,11 +433,12 @@ def header_info():
 
     key = 'user_data:%s:%s' % (user.get('username'), datetime.now().strftime('%Y-%m-%d'))
 
-    data = dict(balance=0)
+    data = dict(balance=0, refreshes=0)
 
     b_data = r_session.get(key)
     if b_data is not None:
         data['balance'] = json.loads(b_data.decode('utf-8')).get('balance')
+        data['refreshes'] = json.loads(b_data.decode('utf-8')).get('refreshes')
 
     b_api_error_info = r_session.get('api_error_info')
     if b_api_error_info is not None:
