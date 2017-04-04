@@ -10,16 +10,11 @@ appversion = '3.1.7'
 server_address = 'http://1-api-red.xunlei.com'
 agent_header = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11"}
 
-# 负载均衡
-def api_proxies():
-    return {}
-
 # 提交迅雷链接，返回信息
 def api_post(cookies, url, data, verify=False, headers=agent_header, timeout=60):
     address = server_address + url
     try:
-        proxies = api_proxies()
-        r = requests.post(url=address, data=data, proxies=proxies, verify=verify, headers=headers, cookies=cookies, timeout=timeout)
+        r = requests.post(url=address, data=data, verify=verify, headers=headers, cookies=cookies, timeout=timeout)
     except requests.exceptions.RequestException as e:
         return __handle_exception(e=e)
 
@@ -202,8 +197,8 @@ def api_pcSteal_steal(cookies, sid=None):
     return api_post(url='/?r=pcSteal/steal', data=body, cookies=cookies)
 
 # 获取星域存储相关信息
-def ubus_cd(session_id, account_id, action, out_params, url_param=None):
-    url = "http://kjapi.peiluyou.com:5171/ubus_cd?account_id=%s&session_id=%s&action=%s" % (account_id, session_id, action)
+def ubus_cd(session_id, account_id, out_params, url_param=None):
+    url = "http://kjapi.peiluyou.com:5171/ubus_cd?account_id=%s&session_id=%s" % (account_id, session_id)
     if url_param is not None:
         url += url_param
 
@@ -211,11 +206,10 @@ def ubus_cd(session_id, account_id, action, out_params, url_param=None):
 
     data = {"jsonrpc": "2.0", "id": 1, "method": "call", "params": params}
     try:
-        body = dict(data=json.dumps(data), action='onResponse%d' % int(time.time() * 1000))
-        s = requests.Session()
-        s.mount('http://', HTTPAdapter(max_retries=5))
-        proxies = api_proxies()
-        r = s.post(url, data=body, proxies=proxies)
+        body = dict(data=json.dumps(data), action='ubus_%d' % int(time.time() * 1000))
+        with requests.Session() as s:
+            s.mount('http://', HTTPAdapter(max_retries=5))
+            r = s.post(url=url, data=body)
         result = r.text[r.text.index('{'):r.text.rindex('}') + 1]
         return json.loads(result)
 
