@@ -332,6 +332,7 @@ def device_upgrade():
 
     ubus_cd(session_id, account_id, ["upgrade", "start", {}], '&device_id=%s' % device_id)
     ubus_cd(session_id, account_id, ["upgrade", "get_progress", {}], '&device_id=%s' % device_id)
+    # ubus_cd(session_id, account_id, ["upgrade", "check", {}], '&device_id=%s' % device_id)
 
     return redirect(url_for('excavators'))
 
