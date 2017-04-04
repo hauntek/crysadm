@@ -62,7 +62,7 @@ def get_data(username):
                 print('get_data:', user_id, 'mine_info', 'error')
                 continue
 
-            device_info = ubus_cd(session_id, user_id, 'get_devices', ["server", "get_devices", {}])
+            device_info = ubus_cd(session_id, user_id, ["server", "get_devices", {}])
             red_zqb = device_info['result'][1]
 
             account_data_key = account_key + ':data'
