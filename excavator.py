@@ -306,7 +306,7 @@ def device_stop():
     session_id = request.values.get('session_id')
     account_id = request.values.get('account_id')
 
-    ubus_cd(session_id, account_id, 'check', ["dcdn", "stop", {}], '&device_id=%s' % device_id)
+    ubus_cd(session_id, account_id, ["dcdn", "stop", {}], '&device_id=%s' % device_id)
 
     return redirect(url_for('excavators'))
 
@@ -318,7 +318,7 @@ def device_start():
     session_id = request.values.get('session_id')
     account_id = request.values.get('account_id')
 
-    ubus_cd(session_id, account_id, 'check', ["dcdn", "start", {}], '&device_id=%s' % device_id)
+    ubus_cd(session_id, account_id, ["dcdn", "start", {}], '&device_id=%s' % device_id)
 
     return redirect(url_for('excavators'))
 
@@ -330,8 +330,8 @@ def device_upgrade():
     session_id = request.values.get('session_id')
     account_id = request.values.get('account_id')
 
-    ubus_cd(session_id, account_id, 'get_progress', ["upgrade", "start", {}], '&device_id=%s' % device_id)
-    ubus_cd(session_id, account_id, 'get_progress', ["upgrade", "get_progress", {}], '&device_id=%s' % device_id)
+    ubus_cd(session_id, account_id, ["upgrade", "start", {}], '&device_id=%s' % device_id)
+    ubus_cd(session_id, account_id, ["upgrade", "get_progress", {}], '&device_id=%s' % device_id)
 
     return redirect(url_for('excavators'))
 
@@ -343,7 +343,7 @@ def device_reboot():
     session_id = request.values.get('session_id')
     account_id = request.values.get('account_id')
 
-    ubus_cd(session_id, account_id, 'reboot', ["mnt", "reboot", {}], '&device_id=%s' % device_id)
+    ubus_cd(session_id, account_id, ["mnt", "reboot", {}], '&device_id=%s' % device_id)
 
     return redirect(url_for('excavators'))
 
@@ -355,7 +355,7 @@ def device_reset():
     session_id = request.values.get('session_id')
     account_id = request.values.get('account_id')
 
-    ubus_cd(session_id, account_id, 'reset', ["mnt", "reset", {}], '&device_id=%s' % device_id)
+    ubus_cd(session_id, account_id, ["mnt", "reset", {}], '&device_id=%s' % device_id)
 
     return redirect(url_for('excavators'))
 
@@ -373,9 +373,9 @@ def device_noblink():
 
 def noblink(device_id, session_id, account_id):
     for i in range(10):
-        ubus_cd(session_id, account_id, 'noblink', ["mnt", "noblink", {}], '&device_id=%s' % device_id)
+        ubus_cd(session_id, account_id, ["mnt", "noblink", {}], '&device_id=%s' % device_id)
         time.sleep(1)
-        ubus_cd(session_id, account_id, 'blink', ["mnt", "blink", {}], '&device_id=%s' % device_id)
+        ubus_cd(session_id, account_id, ["mnt", "blink", {}], '&device_id=%s' % device_id)
         time.sleep(1)
 
 # 生成设备名称
@@ -390,8 +390,7 @@ def set_device_name():
     session_id = query_s['session_id'][0]
     account_id = query_s['user_id'][0]
 
-    ubus_cd(session_id, account_id, 'set_device_name',
-            ["server", "set_device_name", {"device_name": new_name, "device_id": device_id}])
+    ubus_cd(session_id, account_id, ["server", "set_device_name", {"device_name": new_name, "device_id": device_id}])
 
     return json.dumps(dict(status='success'))
 
@@ -408,6 +407,6 @@ def admin_device():
         action = session.get('action')
         session['action'] = None
 
-    device_info = ubus_cd(session_id, account_id, 'get_device', ["server", "get_device", {"device_id": device_id}])
+    device_info = ubus_cd(session_id, account_id, ["server", "get_device", {"device_id": device_id}])
 
     return render_template('excavators_info.html', action=action, session_id=session_id, account_id=account_id, device_info=device_info)
