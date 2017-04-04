@@ -11,10 +11,12 @@ server_address = 'http://1-api-red.xunlei.com'
 agent_header = {'User-Agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11"}
 
 # 提交迅雷链接，返回信息
-def api_post(cookies, url, data, verify=False, headers=agent_header, timeout=60):
-    address = server_address + url
+def api_post(url, data, cookies, headers=agent_header, timeout=60):
+    url = server_address + url
     try:
-        r = requests.post(url=address, data=data, verify=verify, headers=headers, cookies=cookies, timeout=timeout)
+        with requests.Session() as s:
+            s.mount('http://', HTTPAdapter(max_retries=5))
+            r = s.post(url=url, data=data, headers=headers, cookies=cookies, timeout=timeout)
     except requests.exceptions.RequestException as e:
         return __handle_exception(e=e)
 
