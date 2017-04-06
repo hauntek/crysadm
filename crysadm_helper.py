@@ -250,7 +250,7 @@ def get_offline_user_data():
         if r_session.exists('user:%s:cron_queued' % username): continue
         offline_users.append(username)
 
-    pool = ThreadPool(5)
+    pool = ThreadPool(10)
 
     pool.map(get_data, offline_users)
     pool.close()
