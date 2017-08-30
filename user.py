@@ -170,6 +170,7 @@ def user_change_property(field, value):
     session['action'] = 'property'
 
     if field == 'auto_column':
+        session['action'] = 'info'
         user_info['auto_column'] = True if value == '1' else False
     if field == 'auto_collect':
         user_info['auto_collect'] = True if value == '1' else False
