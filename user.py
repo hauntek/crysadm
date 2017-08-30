@@ -246,14 +246,15 @@ def register():
 @app.route('/user/register', methods=['POST'])
 def user_register():
     invitation_code = request.values.get('invitation_code')
+
+    if not r_session.sismember('invitation_codes', invitation_code) and \
+    not r_session.sismember('public_invitation_codes', invitation_code):
+        session['error_message'] = '无效的邀请码。'
+        return redirect(url_for('register'))
+
     username = request.values.get('username')
     password = request.values.get('password')
     re_password = request.values.get('re_password')
-
-    if not r_session.sismember('invitation_codes', invitation_code) and \
-            not r_session.sismember('public_invitation_codes', invitation_code):
-        session['error_message'] = '无效的邀请码。'
-        return redirect(url_for('register'))
 
     if username == '':
         session['error_message'] = '用户名不能为空.'
@@ -263,9 +264,12 @@ def user_register():
         session['error_message'] = '该用户名已存在.'
         return redirect(url_for('register'))
 
-    r = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-    if re.match(r, username) is None:
-        session['error_message'] = '用户名请输入电子邮箱地址.'
+    if not username.isalnum():
+        session['error_message'] = '用户名含有非法字符.'
+        return redirect(url_for('register'))
+
+    if len(username) < 6 or len(username) > 20:
+        session['error_message'] = '用户名长度6~20个字符.'
         return redirect(url_for('register'))
 
     if password != re_password:
