@@ -195,29 +195,29 @@ def user_change_property(field, value):
 def user_change_password():
     user = session.get('user_info')
 
-    o_password = request.values.get('old_password')
-    n_password = request.values.get('new_password')
-    n2_password = request.values.get('new2_password')
+    old_password = request.values.get('old_password')
     session['action'] = 'password'
-
-    if n_password != n2_password:
-        session['error_message'] = '两次输入的新密码不一致.'
-        return redirect(url_for('user_profile'))
-
-    if len(n_password) < 8:
-        session['error_message'] = '输入的新密码必须8位数以上.'
-        return redirect(url_for('user_profile'))
 
     user_key = '%s:%s' % ('user', user.get('username'))
     user_info = json.loads(r_session.get(user_key).decode('utf-8'))
 
-    hashed_password = hash_password(o_password)
-
+    hashed_password = hash_password(old_password)
     if user_info.get('password') != hashed_password:
         session['error_message'] = '原密码不正确.'
         return redirect(url_for('user_profile'))
 
-    user_info['password'] = hash_password(n_password)
+    new_password = request.values.get('new_password')
+    new2_password = request.values.get('new2_password')
+
+    if new_password != new2_password:
+        session['error_message'] = '两次输入的新密码不一致.'
+        return redirect(url_for('user_profile'))
+
+    if len(new_password) < 8:
+        session['error_message'] = '输入的新密码必须8位数以上.'
+        return redirect(url_for('user_profile'))
+
+    user_info['password'] = hash_password(new_password)
     r_session.set(user_key, json.dumps(user_info))
 
     return redirect(url_for('user_profile'))
