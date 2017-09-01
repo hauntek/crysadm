@@ -12,7 +12,7 @@
 - 终端执行命令 `pip install redis, requests, flask`
 
 2.配置项目启动参数
-- 使用支持UTF-8格式编辑器编辑config.py 配置 redis server
+- 使用支持UTF-8编码编辑器编辑 config.py 配置 redis server
 
 crysadm.py 启动web服务
 - 默认启动为单线程模式，如多并发请使用多线程模式启动
