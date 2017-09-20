@@ -267,11 +267,11 @@ def user_register():
 
     r = r"^[a-zA-Z][a-zA-Z0-9_-]*$"
     if re.match(r, username) is None:
-        session['error_message'] = '用户名含有非法字符.'
+        session['error_message'] = '用户名由字母开头数字和下划线组成.'
         return redirect(url_for('register'))
 
     if len(username) < 6 or len(username) > 20:
-        session['error_message'] = '用户名长度6~20个字符.'
+        session['error_message'] = '用户名长度在6~20个字符之间.'
         return redirect(url_for('register'))
 
     if password != re_password:
