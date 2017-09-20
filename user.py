@@ -265,7 +265,7 @@ def user_register():
         session['error_message'] = '该用户名已存在.'
         return redirect(url_for('register'))
 
-    r = r"^[a-zA-Z][a-zA-Z0-9_-]*$"
+    r = r"^[a-zA-Z][a-zA-Z0-9_-]+$"
     if re.match(r, username) is None:
         session['error_message'] = '用户名由字母开头数字和下划线组成.'
         return redirect(url_for('register'))
