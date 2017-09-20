@@ -265,7 +265,7 @@ def user_register():
         session['error_message'] = '该用户名已存在.'
         return redirect(url_for('register'))
 
-    r = r"^[a-zA-Z0-9_.+-]+$"
+    r = r"^[a-zA-Z][a-zA-Z0-9_-]*$"
     if re.match(r, username) is None:
         session['error_message'] = '用户名含有非法字符.'
         return redirect(url_for('register'))
