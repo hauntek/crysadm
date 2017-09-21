@@ -104,8 +104,9 @@ def down_thread(url, data_list):
 # 反馈百分比进度
 @app.route('/admin/update/progress', methods=['POST'])
 def update_progress():
-    if progress == 0: progress = 72
-    progres = '%.2f' % progress
+    progres = progress
+    if progres == 0: progres = 72
+    progres = '%.2f' % progres
     return json.dumps(dict(result=progres))
 
 # 检查项目
