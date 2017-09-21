@@ -143,7 +143,7 @@ def update(backups=True):
 
     data_info = json.loads(insp_update(check=True))
 
-    if data_info['r'] != 'ok': return data_info['msg']
+    if data_info['r'] != 'ok': return json.dumps(data_info)
 
     data_list = data_info['list']
 
