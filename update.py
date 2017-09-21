@@ -104,9 +104,8 @@ def down_thread(url, data_list):
 # 反馈百分比进度
 @app.route('/admin/update/progress', methods=['POST'])
 def update_progress():
-    progres = progress
-    if progres == 0: progres = 72
-    progres = '%.2f' % progres
+    if progress == 0: progress = 72
+    progres = '%.2f' % progress
     return json.dumps(dict(result=progres))
 
 # 检查项目
@@ -142,9 +141,7 @@ def update(backups=True):
         return json.dumps(dict(r='', msg='在线更新不建议在调试模式下进行！请修改config.py ProductionConfig类 DEBUG = False<br /><br />Ps:你也可以用命令方式更新项目 直接运行update_flash.py即可'))
 
     data_info = json.loads(insp_update(check=True))
-
     if data_info['r'] != 'ok': return json.dumps(data_info)
-
     data_list = data_info['list']
 
     if len(data_list) > 0:
