@@ -74,6 +74,9 @@ def Checksum(rootdir='.', check=False):
 
     return data_list
 
+# 重载项目
+@app.route('/admin/reload_flask', methods=['POST'])
+@requires_admin
 def restart_flask():
     python = sys.executable
     os.execl(python, 'python', *sys.argv)
@@ -109,10 +112,10 @@ def update_progress():
 # 检查项目
 @app.route('/admin/insp_update', methods=['POST'])
 @requires_admin
-def insp_update():
+def insp_update(check=False):
 
     data_list = list()
-    data_file = Checksum(rootdir, False) # 是否生成本地校验记录
+    data_file = Checksum(rootdir, check) # 是否生成本地校验记录
 
     try:
         data = urlopen(service_url + 'filemd5.txt')
@@ -136,21 +139,13 @@ def update(backups=True):
         return json.dumps(dict(r='', msg='正在更新中...'))
 
     if app.debug == True:
-        return json.dumps(dict(r='', msg='在线更新不建议在调试模式下进行，请修改config.py ProductionConfig类 DEBUG = False<br />ps:你也可以用命令方式更新 直接运行update_flash.py即可'))
+        return json.dumps(dict(r='', msg='在线更新不建议在调试模式下进行！请修改config.py ProductionConfig类 DEBUG = False<br /><br />Ps:你也可以用命令方式更新项目 直接运行update_flash.py即可'))
 
-    data_list = list()
-    data_file = Checksum(rootdir, True) # 是否生成本地校验记录
+    data_info = json.loads(insp_update(check=True))
 
-    try:
-        data = urlopen(service_url + 'filemd5.txt')
-        for b_date in data:
-            data_info = json.loads(b_date.decode('utf-8'))
-            if data_info['file'] in ignore_file: continue
-            if data_info in data_file: continue
-            data_list.append(data_info)
-            # print(data_info)
-    except Exception as e:
-        return json.dumps(dict(r='', msg='云端对比文件出现错误，请稍后重试'))
+    if data_info['r'] != 'ok': return data_info['msg']
+
+    data_list = data_info['list']
 
     if len(data_list) > 0:
         if backups:
