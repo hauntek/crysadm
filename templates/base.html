@@ -63,7 +63,7 @@
         <div class="row border-bottom white-bg">
         <nav class="navbar navbar-static-top" role="navigation">
             <div class="navbar-header">
-                <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
                     <i class="fa fa-reorder"></i>
                 </button>
                 <a href="#" class="navbar-brand">Crysadm+</a>
@@ -71,13 +71,11 @@
             <div class="navbar-collapse collapse" id="navbar">
                 <ul class="nav navbar-nav">
                     {% for id, href, caption, sub_navigation_bar in navigation_bar %}
-                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% endif %}>
+                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% else %} class="dropdown"{% endif %}>
                         {% if sub_navigation_bar |length == 0 %}
-                        <a aria-expanded="false" role="button" href="{{ href |e }}"> {{ caption |e }}</a>
+                        <a role="button" href="{{ href |e }}"> {{ caption |e }}</a>
                         {% else %}
-                        <a aria-expanded="false" role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }}
-                            <span class="caret"></span>
-                        </a>
+                        <a role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }} <span class="caret"></span></a>
                         <ul role="menu" class="dropdown-menu">
                             {% for id, href, caption in sub_navigation_bar %}
                             <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href |e }}">{{ caption |e }}</a></li>
@@ -88,13 +86,11 @@
                     {% endfor %}
                     {% if session.user_info.is_admin %}
                     {% for id, href, caption, sub_navigation_bar in navigation_admin_bar %}
-                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% endif %}>
+                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% else %} class="dropdown"{% endif %}>
                         {% if sub_navigation_bar |length == 0 %}
-                        <a aria-expanded="false" role="button" href="{{ href |e }}"> {{ caption |e }}</a>
+                        <a role="button" href="{{ href |e }}"> {{ caption |e }}</a>
                         {% else %}
-                        <a aria-expanded="false" role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }}
-                            <span class="caret"></span>
-                        </a>
+                        <a role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }} <span class="caret"></span></a>
                         <ul role="menu" class="dropdown-menu">
                             {% for id, href, caption in sub_navigation_bar %}
                             <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href |e }}">{{ caption |e }}</a></li>
@@ -105,13 +101,11 @@
                     {% endfor %}
                     {% endif %}
                     {% for id, href, caption, sub_navigation_bar in navigation_all_bar %}
-                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% endif %}>
+                    <li{% if id == active_page or active_page in sub_navigation_bar |map(attribute='0') %} class="active"{% else %} class="dropdown"{% endif %}>
                         {% if sub_navigation_bar |length == 0 %}
-                        <a aria-expanded="false" role="button" href="{{ href |e }}"> {{ caption |e }}</a>
+                        <a role="button" href="{{ href |e }}"> {{ caption |e }}</a>
                         {% else %}
-                        <a aria-expanded="false" role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }}
-                            <span class="caret"></span>
-                        </a>
+                        <a role="button" href="{{ href |e }}" class="dropdown-toggle" data-toggle="dropdown"> {{ caption |e }} <span class="caret"></span></a>
                         <ul role="menu" class="dropdown-menu">
                             {% for id, href, caption in sub_navigation_bar %}
                             <li{% if id == active_page %} class="active"{% endif %}><a href="{{ href |e }}">{{ caption |e }}</a></li>
@@ -122,14 +116,8 @@
                     {% endfor %}
                 </ul>
                 <ul class="nav navbar-top-links navbar-right">
-                    <li>
-                        <span class="m-r-sm text-muted welcome-message" id="local"></span>
-                    </li>
-                    <li>
-                        <a href="/user/logout">
-                            <i class="fa fa-sign-out"></i> 登出
-                        </a>
-                    </li>
+                    <li><span class="m-r-sm text-muted welcome-message" id="local"></span></li>
+                    <li><a href="/user/logout"><i class="fa fa-sign-out"></i> 登出</a></li>
                 </ul>
             </div>
         </nav>
