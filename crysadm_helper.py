@@ -346,7 +346,11 @@ def check_drawcash(cookies):
     if wc_pkg > 10:
         if wc_pkg > 200: wc_pkg = 200
         r = draw_cash(cookies, wc_pkg)
-        loging(user_info, '自动执行', '提现', cookies.get('userid'), r.get('rd'))
+        if r.get('r') != 0:
+            log = r.get('rd')
+        else:
+            log = '领取:%s元.' % wc_pkg
+        loging(user_info, '自动执行', '提现', cookies.get('userid'), log)
     time.sleep(3)
 
 # 执行免费宝箱函数
