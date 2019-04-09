@@ -200,7 +200,7 @@ def api_pcSteal_steal(cookies, sid=None):
 
 # 获取星域存储相关信息
 def ubus_cd(session_id, account_id, out_params, url_param=None):
-    url = "http://kjapi.peiluyou.com:5171/ubus_cd?account_id=%s&session_id=%s" % (account_id, session_id)
+    url = "http://ocapi.peiluyou.com:8008/ubus_cd?account_id=%s&session_id=%s" % (account_id, session_id)
     if url_param is not None:
         url += url_param
 
