@@ -1,7 +1,7 @@
 # Crysadm+ 云端监控
 ![image](https://github.com/hauntek/crysadm/raw/master/static/img/preview.png)
 
-最新更新：2017-08-30
+最新更新：2019-04-09
 在线预览：http://www.crysadmapp.cn/guest
 
 更新预告：近期准备调整表格优化，按钮支持动态请求，减少重定向刷新。
@@ -23,6 +23,10 @@ crysadm.py 启动web服务
 crysadm_helper.py 启动后台服务
 
 4.启动web服务后访问 /install 生成管理员账号
+
+## Update 2019-04-09
+
+1.调整星域存储相关信息接口至最新地址
 
 ## Update 2017-08-30
 
